@@ -1,9 +1,9 @@
-package com.example.demo.board.controller;
+package com.example.demo.domain.board.controller;
 
-import com.example.demo.board.dto.BoardRequestDto;
-import com.example.demo.board.dto.BoardResponseDto;
-import com.example.demo.board.entity.Board;
-import com.example.demo.board.service.BoardService;
+import com.example.demo.domain.board.dto.BoardRequestDto;
+import com.example.demo.domain.board.dto.BoardResponseDto;
+import com.example.demo.domain.board.entity.Board;
+import com.example.demo.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;

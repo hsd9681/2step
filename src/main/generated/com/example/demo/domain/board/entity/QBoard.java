@@ -1,4 +1,4 @@
-package com.example.demo.board.entity;
+package com.example.demo.domain.board.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 

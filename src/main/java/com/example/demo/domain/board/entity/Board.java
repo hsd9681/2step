@@ -1,6 +1,6 @@
-package com.example.demo.board.entity;
+package com.example.demo.domain.board.entity;
 
-import com.example.demo.board.dto.BoardRequestDto;
+import com.example.demo.domain.board.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
