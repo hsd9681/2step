@@ -16,5 +16,5 @@ public class ColumnDto {
     @Size(min = 1, max = 50, message = "상태 이름은 1자 이상 50자 이하여야 합니다.")
     private String name; // 상태 이름
 
-    private Integer order; // 순서
+    private Long order; // 순서
 }

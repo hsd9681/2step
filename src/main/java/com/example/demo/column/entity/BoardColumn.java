@@ -21,5 +21,5 @@ public class BoardColumn {
     private String name; // 상태 이름
 
     @Column(nullable = false)
-    private Integer order; // 컬럼의 순서
+    private Long order; // 컬럼의 순서
 }
