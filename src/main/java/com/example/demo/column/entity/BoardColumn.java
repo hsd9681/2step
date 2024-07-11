@@ -23,4 +23,13 @@ public class BoardColumn {
 
     @Column(nullable = false)
     private Long order; // 컬럼의 순서
+
+
+    // 📢 임시 엔티티 관계 설정
+//    @ManyToOne
+//    @JoinColumn(name = "board_id")
+//    private Board board;
+//
+//    @OneToMany(mappedBy = "boardcolumn", cascade = CascadeType.ALL)
+//    private List<Card> cards;
 }
