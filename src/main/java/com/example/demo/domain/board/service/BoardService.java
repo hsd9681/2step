@@ -16,7 +16,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     // 보드 생성
-    public Board createBoard(BoardRequestDto requestDto, String username) {
+    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
 //        User user = userService.findUser(username);
 //        if (user.getUserStatus.equals("MANAGER")) {
 //
@@ -24,15 +24,16 @@ public class BoardService {
         // 이름, 한 줄 설명 : 필수 데이터
 
         Board board = new Board(requestDto.getTitle(), requestDto.getContent());
-        return boardRepository.save(board);
-//        return new BoardResponseDto(board);
+        boardRepository.save(board);
+        return new BoardResponseDto(board);
     }
 
     // 보드 조회
     public List<BoardResponseDto> getBoard(String username) {
         // username을 가진 board 전체 조회 : 일반유저와 매니저 모두 조회 가능 - 본인이 속한 모든 보드 조회하기
-        List<BoardResponseDto> boards = boardRepository.findAllByUserName(username);
-        return boards;
+//        List<BoardResponseDto> boards = boardRepository.findAllByUserName(username);
+//        return boards;
+        return null;
     }
 
     // 보드 수정
