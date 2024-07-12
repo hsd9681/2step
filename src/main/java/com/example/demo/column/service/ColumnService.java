@@ -7,6 +7,7 @@ import com.example.demo.column.repository.ColumnRepository;
 import com.example.demo.column.exception.UnauthorizedException;
 import com.example.demo.column.exception.ColumnAlreadyExistsException;
 import com.example.demo.column.exception.ColumnNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +18,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ColumnService {
 
     private final ColumnRepository columnRepository;
-
-    @Autowired
-    public ColumnService(ColumnRepository columnRepository) {
-        this.columnRepository = columnRepository;
-    }
-
 
     // 📢 실제 권한 체크: 현재는 임시로 hasPermission 변수를 사용
     // 실제 인증 및 권한 체크 로직으로 추후 대체 필요

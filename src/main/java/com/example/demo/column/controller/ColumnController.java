@@ -4,7 +4,7 @@ import com.example.demo.column.dto.RequestColumnDto;
 import com.example.demo.column.dto.ResponseColumnDto;
 import com.example.demo.column.service.ColumnService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/board")
+@RequiredArgsConstructor
 public class ColumnController {
 
     private final ColumnService columnService;
-
-    @Autowired
-    public ColumnController(ColumnService columnService) {
-        this.columnService = columnService;
-    }
 
     // 컬럼 생성 (보드에 컬럼 생성)
     @PostMapping("/{id}/col")
