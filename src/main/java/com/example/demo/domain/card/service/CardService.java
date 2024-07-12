@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +19,18 @@ public class CardService {
 
     private final CardRepository cardRepository;
 
-    public List<CardResponseDto> getCards(){
-        List<Card> cards = cardRepository.findAll();
-        List<CardResponseDto> cardResponseDtos = new ArrayList<>();
-        for (Card card : cards) {
-            cardResponseDtos.add(new CardResponseDto(card));
+    public List<CardResponseDto> getCards() {
+        List<CardResponseDto> result = new ArrayList<>();
+        List<String> statuses = List.of("todo", "in-progress", "done","emergency");  // 4종류 status 값을 넣어주세요
+
+        for (String status : statuses) {
+            List<Card> cards = cardRepository.findByStatus(status);
+            result.addAll(cards.stream()
+                    .map(CardResponseDto::new)
+                    .collect(Collectors.toList()));
         }
-        return cardResponseDtos;
+
+        return result;
     }
 
     public  CardResponseDto createCard(CardRequestDto requestDto) {
