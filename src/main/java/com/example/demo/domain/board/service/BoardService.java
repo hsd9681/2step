@@ -26,24 +26,26 @@ public class BoardService {
         Board board = new Board(requestDto.getTitle(), requestDto.getContent()); //보드 생성
         board.setManager(user); // 사용자를 매니저로
 
-        boardRepository.save(board); // 보드를 저장 => entity 연관관계가 맺어져있어서 (cascade.all) permission도 저장됨
+        boardRepository.save(board); // 보드를 저장 => entity 연관관계가 맺어져있어서(cascade.all) permission도 저장됨
         return new BoardResponseDto(board);
     }
 
     // 보드 조회
     public List<BoardResponseDto> getBoard(String username) {
-        // username을 가진 board 전체 조회 : 일반유저와 매니저 모두 조회 가능 - 본인이 속한 모든 보드 조회하기
-//        List<BoardResponseDto> boards = boardRepository.findAllByUserName(username);
-        User user = userService.findUserByUsername(username);
-        Long userid = user.getId();
-        List<BoardResponseDto> boards = boardRepository.findAllByUserId(userid);
-        return boards;
+//        // username을 가진 board 전체 조회 : 일반유저와 매니저 모두 조회 가능 - 본인이 속한 모든 보드 조회하기
+//        User user = userService.findUserByUsername(username);
+//        Long userid = user.getId();
+//
+//        List<BoardResponseDto> boards = boardRepository.findAllByUserId(userid);
+//        return boards;
+        return null;
     }
 
     // 보드 수정
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto requestDto, String username) {
         // 매니저만 수정 가능
         User user = userService.findUserByUsername(username);
+        Long userid = user.getId();
 
         Board board = boardRepository.getBoardById(boardId);
         board.update(requestDto.getTitle(), requestDto.getContent());

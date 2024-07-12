@@ -3,8 +3,10 @@ package com.example.demo.domain.permission.entity;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Entity @Table(name = "permission")
+@NoArgsConstructor
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

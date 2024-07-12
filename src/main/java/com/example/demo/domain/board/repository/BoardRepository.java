@@ -10,7 +10,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Board getBoardById(Long boardId);
 
-    List<BoardResponseDto> findAllByUserId(Long userid);
+//    List<BoardResponseDto> findAllByUserId(Long userid);
 
 //    List<BoardResponseDto> findAllByUserName(String username);
 }
