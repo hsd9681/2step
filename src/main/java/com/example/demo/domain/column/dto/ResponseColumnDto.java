@@ -1,4 +1,4 @@
-package com.example.demo.column.dto;
+package com.example.demo.domain.column.dto;
 
 import lombok.Builder;
 import lombok.Getter;

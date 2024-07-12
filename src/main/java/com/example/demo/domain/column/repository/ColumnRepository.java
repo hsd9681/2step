@@ -1,6 +1,6 @@
-package com.example.demo.column.repository;
+package com.example.demo.domain.column.repository;
 
-import com.example.demo.column.entity.BoardColumn;
+import com.example.demo.domain.column.entity.BoardColumn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

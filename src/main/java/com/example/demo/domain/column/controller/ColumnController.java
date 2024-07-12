@@ -1,8 +1,8 @@
-package com.example.demo.column.controller;
+package com.example.demo.domain.column.controller;
 
-import com.example.demo.column.dto.RequestColumnDto;
-import com.example.demo.column.dto.ResponseColumnDto;
-import com.example.demo.column.service.ColumnService;
+import com.example.demo.domain.column.dto.RequestColumnDto;
+import com.example.demo.domain.column.dto.ResponseColumnDto;
+import com.example.demo.domain.column.service.ColumnService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

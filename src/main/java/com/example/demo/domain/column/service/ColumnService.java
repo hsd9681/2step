@@ -1,14 +1,13 @@
-package com.example.demo.column.service;
+package com.example.demo.domain.column.service;
 
-import com.example.demo.column.dto.RequestColumnDto;
-import com.example.demo.column.dto.ResponseColumnDto;
-import com.example.demo.column.entity.BoardColumn;
-import com.example.demo.column.repository.ColumnRepository;
-import com.example.demo.column.exception.UnauthorizedException;
-import com.example.demo.column.exception.ColumnAlreadyExistsException;
-import com.example.demo.column.exception.ColumnNotFoundException;
+import com.example.demo.domain.column.dto.RequestColumnDto;
+import com.example.demo.domain.column.dto.ResponseColumnDto;
+import com.example.demo.domain.column.entity.BoardColumn;
+import com.example.demo.domain.column.repository.ColumnRepository;
+import com.example.demo.common.exception.UnauthorizedException;
+import com.example.demo.common.exception.ColumnAlreadyExistsException;
+import com.example.demo.common.exception.ColumnNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
