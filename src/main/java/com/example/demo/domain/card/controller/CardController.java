@@ -29,14 +29,14 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(cardService.createCard(requestDto));
     }
-    @PutMapping("/card/{id}")
+    @PutMapping("/card/{cardId}")
     public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId,@RequestBody @Valid CardRequestDto requestDto){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(cardService.updateCard(cardId, requestDto));
     }
-    @DeleteMapping("/card/{id}")
+    @DeleteMapping("/card/{cardId}")
     public ResponseEntity<String> deleteCard(@PathVariable Long cardId) {
         cardService.deleteCard(cardId);
-        return ResponseEntity.status(HttpStatus.OK).body("댓글이 성공적으로 삭제되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body("카드가 성공적으로 삭제되었습니다.");
     }
 }

@@ -36,4 +36,10 @@ public class Card{
         this.deadline = requestDto.getDeadline();
         this.worker = requestDto.getWorker();
     }
+    public void update(CardRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.deadline = requestDto.getDeadline();
+        this.worker = requestDto.getWorker();
+    }
 }
