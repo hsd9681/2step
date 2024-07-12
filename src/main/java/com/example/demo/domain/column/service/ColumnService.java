@@ -26,7 +26,7 @@ public class ColumnService {
     @Transactional
     public ResponseColumnDto createColumn(RequestColumnDto requestDto, User user) {
         // 권한 체크: MANAGER 권한을 가진 사용자만 컬럼 생성 허용
-        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+        if (!"MANAGER".equals(user.getPermissions().getAuthority().getAuthority())) {
             throw new IllegalArgumentException("컬럼 생성 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
 

@@ -4,6 +4,7 @@ import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
+import com.example.demo.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,15 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserService userService;
 
     // 보드 생성
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-//        User user = userService.findUser(username);
-//        if (user.getUserStatus.equals("MANAGER")) {
+//        User user = userService.findUserByUsername(userDetails.getUsername());
+//        if (user.equals("asd")) {
 //
-//        } : user의 권한이 manager일 때만 생성 가능 - 예외처리 하기
-        // 이름, 한 줄 설명 : 필수 데이터
+//        } //: user의 권한이 manager일 때만 생성 가능 - 예외처리 하기
+//        // 이름, 한 줄 설명 : 필수 데이터
 
         Board board = new Board(requestDto.getTitle(), requestDto.getContent());
         boardRepository.save(board);
