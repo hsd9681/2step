@@ -1,5 +1,7 @@
 package com.example.demo.domain.user.service;
 
+import com.example.demo.common.exception.CustomException;
+import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.user.dto.SignupRequestDto;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
@@ -56,4 +58,9 @@ public class UserService {
         );
         user.updateRefreshToken(null);
     }
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
 }
