@@ -4,9 +4,7 @@ import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.repository.ColumnRepository;
-import com.example.demo.common.exception.UnauthorizedException;
-import com.example.demo.common.exception.ColumnAlreadyExistsException;
-import com.example.demo.common.exception.ColumnNotFoundException;
+import com.example.demo.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,30 +18,36 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ColumnService {
 
-    private final ColumnRepository columnRepository;
 
-    // 📢 실제 권한 체크: 현재는 임시로 hasPermission 변수를 사용
-    // 실제 인증 및 권한 체크 로직으로 추후 대체 필요
+    private final ColumnRepository columnRepository;
 
 
     // 컬럼 생성 (보드에 컬럼 생성)
-    // 성공 조건 :
-    // (1). 보드에 컬럼 생성 : createColumn 메소드로 구현
-    // (2). '상태 이름' 필수 데이터 : ColumnDto 에 name 필드로 구현
     @Transactional
-    public ResponseColumnDto createColumn(RequestColumnDto requestDto, boolean hasPermission) {
-        if (!hasPermission) {
-            throw new UnauthorizedException("권한이 없습니다.");
+    public ResponseColumnDto createColumn(RequestColumnDto requestDto, User user) {
+        // 권한 체크: MANAGER 권한을 가진 사용자만 컬럼 생성 허용
+        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+            throw new IllegalArgumentException("컬럼 생성 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
+
+        // 상태 이름 필수 데이터 체크
+        if (requestDto.getName() == null || requestDto.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("상태 이름은 필수 데이터입니다.");
+        }
+
+        // 이미 존재하는 상태 이름 체크
         if (columnRepository.existsByName(requestDto.getName())) {
-            throw new ColumnAlreadyExistsException("이미 존재하는 상태 이름입니다.");
+            throw new IllegalArgumentException("이미 존재하는 상태 이름입니다.");
         }
 
-        // 변경: BoardColumn 객체 생성 방식 수정
+        // 새 컬럼의 순서 결정
         Long maxOrder = columnRepository.findMaxOrder().orElse(0L);
-        // 변경: 생성자를 사용하여 BoardColumn 객체 생성
-        BoardColumn boardColumn = new BoardColumn(requestDto.getName(), maxOrder + 1);
+        Long newOrder = maxOrder + 1;
 
+        // BoardColumn 객체 생성
+        BoardColumn boardColumn = new BoardColumn(requestDto.getName(), newOrder);
+
+        // 저장 및 반환
         boardColumn = columnRepository.save(boardColumn);
         return convertToResponseDto(boardColumn);
     }
@@ -54,13 +58,14 @@ public class ColumnService {
     // 취소 → 삭제 기능 수행 X
     // 확인 → 삭제 기능 수행
     @Transactional
-    public void deleteColumn(Long id, boolean hasPermission) {
-        if (!hasPermission) {
-            throw new UnauthorizedException("권한이 없습니다."); // 예외 처리 : 권한 없는 사용자
+    public void deleteColumn(Long id, User user) {
+        // MANAGER 권한 체크
+        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+            throw new IllegalArgumentException("컬럼 삭제 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
         BoardColumn boardColumn = columnRepository.findById(id)
                 // 예외 처리 : 중복 '상태 이름'
-                .orElseThrow(() -> new ColumnNotFoundException("이미 삭제된 컬럼이거나 존재하지 않는 컬럼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("이미 삭제된 컬럼이거나 존재하지 않는 컬럼입니다."));
         columnRepository.delete(boardColumn);
     }
 
@@ -72,10 +77,12 @@ public class ColumnService {
     // 현재 순서 이동 방식은 '확정' 버튼을 누르는 방식에 가까움, 드래그 앤 드롭 시 마다 순서를 변경하려면
     // 프론트엔드에서 각 이동마다 API를 호출하도록 구현
     @Transactional
-    public List<ResponseColumnDto> reorderColumns(List<Long> columnIds, boolean hasPermission) {
-        if (!hasPermission) {
-            throw new UnauthorizedException("권한이 없습니다.");
+    public List<ResponseColumnDto> reorderColumns(List<Long> columnIds, User user) {
+        // MANAGER 권한 체크
+        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+            throw new IllegalArgumentException("컬럼 순서 변경 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
+
         List<BoardColumn> boardColumns = columnRepository.findAllById(columnIds);
         // Map을 사용하여 각 ID에 대한 BoardColumn을 빠르게 get
         Map<Long, BoardColumn> columnMap = boardColumns.stream()
@@ -87,7 +94,7 @@ public class ColumnService {
             Long id = columnIds.get(i);
             BoardColumn boardColumn = columnMap.get(id);
             if (boardColumn == null) {
-                throw new ColumnNotFoundException("컬럼을 찾을 수 없습니다: " + id);
+                throw new IllegalArgumentException("컬럼을 찾을 수 없습니다: " + id);
             }
             boardColumn.changeOrder(Long.valueOf(i + 1)); // 순서 재정렬
         }

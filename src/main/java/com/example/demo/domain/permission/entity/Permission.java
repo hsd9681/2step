@@ -2,6 +2,7 @@ package com.example.demo.domain.permission.entity;
 
 import com.example.demo.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity @Table(name = "permission")
 public class Permission {
@@ -17,6 +18,7 @@ public class Permission {
 //    @JoinColumn(name = "board_id")
 //    private Board board;
 
+    @Getter
     @Column(name = "authority")
     private PermissionType authority;
 }

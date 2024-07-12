@@ -1,5 +1,6 @@
 package com.example.demo.domain.user.entity;
 
+import com.example.demo.domain.permission.entity.Permission;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,11 @@ public class User {
 
     @Column
     private String refreshToken;
+
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "permission_id", nullable = false)
+    private Permission permission;
 
     @Builder
     public User(String username, String password, String refreshToken) {
