@@ -34,7 +34,7 @@ public class BoardController {
     }
 
     // 보드 수정
-    @PutMapping("/{board_id}")
+    @PutMapping("/{boardId}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long boardId,
                                                         @RequestBody BoardRequestDto requestDto,
                                                         @AuthenticationPrincipal UserDetails userDetails) {

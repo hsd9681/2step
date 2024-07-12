@@ -25,6 +25,9 @@ public enum ErrorCode {
     RECENT_PASSWORD_MATCH(HttpStatus.BAD_REQUEST, "최근 사용했던 비밀번호는 변경할 수 없습니다."),
     INCORRECT_PASSWORD(HttpStatus.UNAUTHORIZED, "입력하신 비밀번호가 일치하지 않습니다."),
 
+    // 사용자 권한 관련 오류 코드
+    USER_NOT_MANAGER(HttpStatus.CONFLICT, "해당 기능에 접근할 수 있는 권한이 없습니다."),
+
     // 소셜 로그인 도메인 오류 코드
     SOCIAL_TOKEN_GET_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "해당하는 소셜 유저 토큰을 가져오는데 실패했습니다."),
     SOCIAL_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 소셜 유저 데이터를 가져오는데 실패했습니다."),

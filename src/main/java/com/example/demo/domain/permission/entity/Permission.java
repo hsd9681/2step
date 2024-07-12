@@ -23,6 +23,7 @@ public class Permission {
 
     @Getter
     @Column(name = "authority")
+    @Enumerated(EnumType.STRING)
     private PermissionType authority;
 
     public Permission(User user, Board board, PermissionType permissionType) {
