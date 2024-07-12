@@ -4,6 +4,7 @@ import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.repository.ColumnRepository;
+import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class ColumnService {
     @Transactional
     public ResponseColumnDto createColumn(RequestColumnDto requestDto, User user) {
         // 권한 체크: MANAGER 권한을 가진 사용자만 컬럼 생성 허용
-        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+        if (user.getPermission() != PermissionType.MANAGER) {
             throw new IllegalArgumentException("컬럼 생성 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
 
@@ -60,7 +61,7 @@ public class ColumnService {
     @Transactional
     public void deleteColumn(Long id, User user) {
         // MANAGER 권한 체크
-        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+        if (user.getPermission() != PermissionType.MANAGER) {
             throw new IllegalArgumentException("컬럼 삭제 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
         BoardColumn boardColumn = columnRepository.findById(id)
@@ -79,7 +80,7 @@ public class ColumnService {
     @Transactional
     public List<ResponseColumnDto> reorderColumns(List<Long> columnIds, User user) {
         // MANAGER 권한 체크
-        if (!"MANAGER".equals(user.getPermission().getAuthority().getAuthority())) {
+        if (user.getPermission() != PermissionType.MANAGER) {
             throw new IllegalArgumentException("컬럼 순서 변경 권한이 없습니다. MANAGER 권한이 필요합니다.");
         }
 
