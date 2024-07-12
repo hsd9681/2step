@@ -42,7 +42,7 @@ public class BoardController {
     }
 
     // 보드 삭제
-    @DeleteMapping("/{board_id}")
+    @DeleteMapping("/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal UserDetails userDetails) {
         boardService.deleteBoard(boardId, userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body("보드가 삭제되었습니다.");

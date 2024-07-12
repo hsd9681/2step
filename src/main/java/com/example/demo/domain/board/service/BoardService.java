@@ -72,8 +72,15 @@ public class BoardService {
         // 매니저만 삭제 가능
         // 확인 메세지 출력 후 확인 버튼 누르면 삭제 되도록 단계 거치기
         User user = userService.findUserByUsername(username);
+        Long userid = user.getId();
 
-        boardRepository.deleteById(boardId);
+        Permission permission = permissionRepository.findByUser_IdAndBoard_Id(userid, boardId);
+
+        if (permission.getAuthority() == PermissionType.MANAGER) {
+            boardRepository.deleteById(boardId);
+        } else {
+            throw new CustomException(ErrorCode.USER_NOT_MANAGER);
+        }
     }
 
     // 사용자 초대
