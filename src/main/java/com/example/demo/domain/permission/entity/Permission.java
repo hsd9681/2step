@@ -1,5 +1,6 @@
 package com.example.demo.domain.permission.entity;
 
+import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.user.entity.User;
 import jakarta.persistence.*;
 
@@ -13,9 +14,9 @@ public class Permission {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "board_id")
-//    private Board board;
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @Column(name = "authority")
     private PermissionType authority;
