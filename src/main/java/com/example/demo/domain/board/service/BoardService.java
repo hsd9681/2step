@@ -4,13 +4,13 @@ import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
-import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,17 +33,20 @@ public class BoardService {
     // 보드 조회
     public List<BoardResponseDto> getBoard(String username) {
         // username을 가진 board 전체 조회 : 일반유저와 매니저 모두 조회 가능 - 본인이 속한 모든 보드 조회하기
-//        List<BoardResponseDto> boards = boardRepository.findAllByUserName(username);
         User user = userService.findUserByUsername(username);
         Long userid = user.getId();
-        List<BoardResponseDto> boards = boardRepository.findAllByUserId(userid);
-        return boards;
+
+        List<Board> boards = boardRepository.findByPermissions_User_Id(userid);
+        return boards.stream()
+                .map(BoardResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     // 보드 수정
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto requestDto, String username) {
         // 매니저만 수정 가능
         User user = userService.findUserByUsername(username);
+        Long userid = user.getId();
 
         Board board = boardRepository.getBoardById(boardId);
         board.update(requestDto.getTitle(), requestDto.getContent());
