@@ -19,7 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new NullPointerException(username + " : 계정이 존재하지 않습니다.")
         );
-
         return new UserDetailsImpl(user);
     }
 }

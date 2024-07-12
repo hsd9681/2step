@@ -3,6 +3,7 @@ package com.example.demo.security;
 import com.example.demo.domain.user.dto.LoginRequestDto;
 import com.example.demo.domain.user.dto.LoginResponseDto;
 import com.example.demo.domain.user.entity.User;
+import com.example.demo.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,9 +27,11 @@ import java.util.Objects;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
         setFilterProcessesUrl("/api/user/login");
     }
 
@@ -64,6 +67,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     {
         User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
         String accessToken = jwtUtil.createAccessToken(user);
+        String refreshToken = jwtUtil.createRefreshToken(user);
+
+        updateRefreshToken(user, refreshToken);
 
         LoginResponseDto responseDto = LoginResponseDto.builder()
                 .httpStatusCode(HttpStatus.OK.value())
@@ -71,9 +77,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .build();
 
         response.addHeader(JwtUtil.ACCESS_TOKEN_HEADER , accessToken);
+        response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER , refreshToken);
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("text/plain;charset=UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+    }
+
+    private void updateRefreshToken(User user, String refreshToken) {
+        String originalRefreshToken = jwtUtil.refreshTokenSubstring(refreshToken);
+        user.updateRefreshToken(originalRefreshToken);
+        userRepository.save(user);
+        log.info("{}", "[로그인 시점][DB] refreshToken 업데이트 성공");
     }
 
     @Override
