@@ -35,6 +35,8 @@ public enum ErrorCode {
     POST_SAME_USER(HttpStatus.FORBIDDEN, "해당 게시글의 작성자입니다."),
     POST_EMPTY(HttpStatus.NO_CONTENT, "먼저 작성하여 소식을 알려보세요!"),
 
+    CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "카드를 찾을 수 없습니다."),
+
     // 댓글 도메인 오류 코드
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     COMMENT_NOT_USER(HttpStatus.FORBIDDEN, "해당 댓글의 작성자가 아닙니다."),
