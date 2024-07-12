@@ -1,5 +1,6 @@
 package com.example.demo.domain.board.dto;
 
+import com.example.demo.domain.board.entity.Board;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,10 @@ public class BoardResponseDto {
         this.content = content;
     }
 
-//    public BoardResponseDto(Board board) {
-//        this.id = board.getId();
-//        this.title = board.getBoard_name();
-//        this.content = board.getIntro();
-//    }
+    public BoardResponseDto(Board board) {
+        this.id = board.getId();
+        this.title = board.getBoardName();
+        this.content = board.getIntro();
+    }
 }
 
