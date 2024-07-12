@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity @Table(name = "users")
 @NoArgsConstructor @Getter
 public class User {
@@ -24,9 +27,8 @@ public class User {
     private String refreshToken;
 
     @Getter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "permission_id", nullable = false)
-    private Permission permission;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Permission> permissions = new ArrayList<>();
 
     @Builder
     public User(String username, String password, String refreshToken) {
