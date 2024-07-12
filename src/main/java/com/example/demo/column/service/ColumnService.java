@@ -1,6 +1,7 @@
 package com.example.demo.column.service;
 
-import com.example.demo.column.dto.ColumnDto;
+import com.example.demo.column.dto.RequestColumnDto;
+import com.example.demo.column.dto.ResponseColumnDto;
 import com.example.demo.column.entity.BoardColumn;
 import com.example.demo.column.repository.ColumnRepository;
 import com.example.demo.column.exception.UnauthorizedException;
@@ -35,23 +36,21 @@ public class ColumnService {
     // (1). 보드에 컬럼 생성 : createColumn 메소드로 구현
     // (2). '상태 이름' 필수 데이터 : ColumnDto 에 name 필드로 구현
     @Transactional
-    public ColumnDto createColumn(ColumnDto columnDto, boolean hasPermission) {
+    public ResponseColumnDto createColumn(RequestColumnDto requestDto, boolean hasPermission) {
         if (!hasPermission) {
-            throw new UnauthorizedException("권한이 없습니다."); // 예외 처리 : 권한 없는 사용자
+            throw new UnauthorizedException("권한이 없습니다.");
         }
-        if (columnRepository.existsByName(columnDto.getName())) {
-            throw new ColumnAlreadyExistsException("이미 존재하는 상태 이름입니다."); // 예외 처리 : 중복 '상태 이름'
+        if (columnRepository.existsByName(requestDto.getName())) {
+            throw new ColumnAlreadyExistsException("이미 존재하는 상태 이름입니다.");
         }
-        BoardColumn boardColumn = new BoardColumn();
-        boardColumn.setName(columnDto.getName());
 
-        // 현재 최대 순서 값을 조회한 후 1을 더하는 방식
-        // 컬럼이 비어있을 시 기본값 0L(아직 컬럼이 없으므로 첫 번째 컬럼의 순서는 1이 될 것)
+        // 변경: BoardColumn 객체 생성 방식 수정
         Long maxOrder = columnRepository.findMaxOrder().orElse(0L);
-        boardColumn.setOrder(maxOrder + 1);
+        // 변경: 생성자를 사용하여 BoardColumn 객체 생성
+        BoardColumn boardColumn = new BoardColumn(requestDto.getName(), maxOrder + 1);
 
         boardColumn = columnRepository.save(boardColumn);
-        return convertToDto(boardColumn);
+        return convertToResponseDto(boardColumn);
     }
 
 
@@ -78,7 +77,7 @@ public class ColumnService {
     // 현재 순서 이동 방식은 '확정' 버튼을 누르는 방식에 가까움, 드래그 앤 드롭 시 마다 순서를 변경하려면
     // 프론트엔드에서 각 이동마다 API를 호출하도록 구현
     @Transactional
-    public List<ColumnDto> reorderColumns(List<Long> columnIds, boolean hasPermission) {
+    public List<ResponseColumnDto> reorderColumns(List<Long> columnIds, boolean hasPermission) {
         if (!hasPermission) {
             throw new UnauthorizedException("권한이 없습니다.");
         }
@@ -95,22 +94,22 @@ public class ColumnService {
             if (boardColumn == null) {
                 throw new ColumnNotFoundException("컬럼을 찾을 수 없습니다: " + id);
             }
-            boardColumn.setOrder(Long.valueOf(i + 1)); // 순서 재정렬
+            boardColumn.changeOrder(Long.valueOf(i + 1)); // 순서 재정렬
         }
 
         // 열 저장 및 반환
         boardColumns = columnRepository.saveAll(boardColumns);
-        return boardColumns.stream().map(this::convertToDto).collect(Collectors.toList());
+        return boardColumns.stream().map(this::convertToResponseDto).collect(Collectors.toList());
     }
 
     // DTO 변환 메서드
     // BoardColumn 엔티티를 ColumnDto 로 변환하는 메서드
     // 엔티티 속성을 DTO에 복사
-    private ColumnDto convertToDto(BoardColumn boardColumn) {
-        ColumnDto dto = new ColumnDto();
-        dto.setId(boardColumn.getId());
-        dto.setName(boardColumn.getName());
-        dto.setOrder(boardColumn.getOrder());
-        return dto;
+    private ResponseColumnDto convertToResponseDto(BoardColumn boardColumn) {
+        return ResponseColumnDto.builder()
+                .id(boardColumn.getId())
+                .name(boardColumn.getName())
+                .order(boardColumn.getOrder())
+                .build();
     }
 }
