@@ -21,17 +21,12 @@ public class BoardService {
 
     // 보드 생성
     public BoardResponseDto createBoard(BoardRequestDto requestDto, String username) {
-        User user = userService.findUserByUsername(username);
-        Long userid = user.getId();
+        User user = userService.findUserByUsername(username); // 보드를 만드는 사용자
 
-//        Permission permission = user.getPermissions();
-//
-//        if (user.getUserStatus.equals("MANAGER")) { //user의 권한이 manager일 때만 생성 가능 - 예외처리 하기
-//
-//        }
+        Board board = new Board(requestDto.getTitle(), requestDto.getContent()); //보드 생성
+        board.setManager(user); // 사용자를 매니저로
 
-        Board board = new Board(requestDto.getTitle(), requestDto.getContent());
-        boardRepository.save(board);
+        boardRepository.save(board); // 보드를 저장 => entity 연관관계가 맺어져있어서(cascade.all) permission도 저장됨
         return new BoardResponseDto(board);
     }
 
