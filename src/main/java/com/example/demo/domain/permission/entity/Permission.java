@@ -20,4 +20,10 @@ public class Permission {
 
     @Column(name = "authority")
     private PermissionType authority;
+
+    public Permission(User user, Board board, PermissionType permissionType) {
+        this.user = user;
+        this.board = board;
+        this.authority = permissionType;
+    }
 }
