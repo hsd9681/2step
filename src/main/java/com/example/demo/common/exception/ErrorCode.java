@@ -36,6 +36,7 @@ public enum ErrorCode {
     COLUMN_ALREADY_DELETED_OR_NOT_EXIST(HttpStatus.NOT_FOUND, "이미 삭제된 컬럼이거나 존재하지 않는 컬럼입니다."),
     DUPLICATE_COLUMN_NAME(HttpStatus.CONFLICT, "이미 존재하는 컬럼 이름입니다."),
     DUPLICATE_STATUS_NAME(HttpStatus.CONFLICT, "이미 존재하는 상태 이름입니다."),
+    ORDER_MUST_BE_POSITIVE(HttpStatus.BAD_REQUEST, "순서는 양수여야 합니다."),
 
     // 소셜 로그인 도메인 오류 코드
     SOCIAL_TOKEN_GET_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "해당하는 소셜 유저 토큰을 가져오는데 실패했습니다."),
