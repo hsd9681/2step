@@ -38,6 +38,10 @@ public class User {
         this.refreshToken = refreshToken;
     }
 
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     // 사용자의 권한을 반환하는 역할
     public PermissionType getPermission() {
         // permissions 가 null 이거나 리스타가 비어 있는 경우 USER 권한 반환

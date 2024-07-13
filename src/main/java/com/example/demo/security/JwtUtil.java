@@ -19,9 +19,10 @@ import java.util.Date;
 public class JwtUtil {
 
     public static final String ACCESS_TOKEN_HEADER = "AccessToken";
-    public static final String AUTHORIZATION_KEY = "auth";
+    public static final String REFRESH_TOKEN_HEADER = "RefreshToken";
     public static final String BEARER_PREFIX = "Bearer ";
-    private static final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private static final long ACCESS_TOKEN_TIME = 1800000;
+    private static final long REFRESH_TOKEN_TIME = 1209600000;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -50,10 +51,22 @@ public class JwtUtil {
         return createToken(user, ACCESS_TOKEN_TIME);
     }
 
+    public String createRefreshToken(User user) {
+        return createToken(user, REFRESH_TOKEN_TIME);
+    }
+
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(ACCESS_TOKEN_HEADER);
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String refreshTokenSubstring(String refreshToken) {
+        if (StringUtils.hasText(refreshToken) && refreshToken.startsWith(BEARER_PREFIX)) {
+            return refreshToken.substring(7);
         }
         return null;
     }
