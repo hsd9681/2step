@@ -1,5 +1,7 @@
 package com.example.demo.domain.column.entity;
 
+import com.example.demo.common.exception.CustomException;
+import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.card.entity.Card;
 import jakarta.persistence.*;
@@ -45,7 +47,7 @@ public class BoardColumn {
     // 순서 변경 메서드
     public void changeOrder(Long newOrder) {
         if (newOrder == null || newOrder < 1) {
-            throw new IllegalArgumentException("Order must be a positive number");
+            throw new CustomException(ErrorCode.ORDER_MUST_BE_POSITIVE);
         }
         this.order = newOrder;
     }
