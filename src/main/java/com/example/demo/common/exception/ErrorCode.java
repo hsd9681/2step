@@ -37,10 +37,6 @@ public enum ErrorCode {
     DUPLICATE_COLUMN_NAME(HttpStatus.CONFLICT, "이미 존재하는 컬럼 이름입니다."),
     DUPLICATE_STATUS_NAME(HttpStatus.CONFLICT, "이미 존재하는 상태 이름입니다."),
 
-
-    // 사용자 권한 관련 오류 코드
-    USER_NOT_MANAGER(HttpStatus.CONFLICT, "해당 기능에 접근할 수 있는 권한이 없습니다."),
-
     // 소셜 로그인 도메인 오류 코드
     SOCIAL_TOKEN_GET_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "해당하는 소셜 유저 토큰을 가져오는데 실패했습니다."),
     SOCIAL_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 소셜 유저 데이터를 가져오는데 실패했습니다."),
