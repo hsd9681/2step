@@ -58,4 +58,12 @@ public class BoardService {
 //        User invitedUser = userService.findUser(invitedUsername); //초대 할 사용자
 
     }
+
+
+    // 주어진 baordId로 Board 객체를 조회 (특정 보드 조회)
+    // 존재하지 않는 경우 예외처리
+    public Board findByBoardId(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 보드를 찾을 수 없습니다: " + boardId));
+    }
 }
