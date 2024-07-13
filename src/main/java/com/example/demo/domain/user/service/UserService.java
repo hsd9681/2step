@@ -58,6 +58,8 @@ public class UserService {
         );
         user.updateRefreshToken(null);
     }
+
+    // user 찾기
     public User findUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.USER_NOT_FOUND));

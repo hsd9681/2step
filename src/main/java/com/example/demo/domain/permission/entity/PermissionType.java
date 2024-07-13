@@ -1,5 +1,8 @@
 package com.example.demo.domain.permission.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum PermissionType {
     MANAGER(UserPermissionType.MANAGER),
     USER(UserPermissionType.USER);
@@ -8,10 +11,6 @@ public enum PermissionType {
 
     PermissionType(String authority) {
         this.authority = authority;
-    }
-
-    public String getAuthority() {
-        return this.authority;
     }
 
     public static class UserPermissionType {
