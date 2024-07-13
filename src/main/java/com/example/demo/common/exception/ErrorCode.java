@@ -28,6 +28,16 @@ public enum ErrorCode {
     // 사용자 권한 관련 오류 코드
     USER_NOT_MANAGER(HttpStatus.CONFLICT, "해당 기능에 접근할 수 있는 권한이 없습니다."),
 
+    // 컬럼
+    STATUS_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "상태 이름은 필수 데이터입니다."),
+    BOARD_COLUMN_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 보드에 존재하지 않는 컬럼입니다."),
+    COLUMN_IDS_NOT_VALID(HttpStatus.BAD_REQUEST, "잘못된 컬럼 ID 목록입니다."),
+    COLUMN_NOT_FOUND(HttpStatus.NOT_FOUND, "컬럼을 찾을 수 없습니다."),
+    COLUMN_ALREADY_DELETED_OR_NOT_EXIST(HttpStatus.NOT_FOUND, "이미 삭제된 컬럼이거나 존재하지 않는 컬럼입니다."),
+    DUPLICATE_COLUMN_NAME(HttpStatus.CONFLICT, "이미 존재하는 컬럼 이름입니다."),
+    DUPLICATE_STATUS_NAME(HttpStatus.CONFLICT, "이미 존재하는 상태 이름입니다."),
+    ORDER_MUST_BE_POSITIVE(HttpStatus.BAD_REQUEST, "순서는 양수여야 합니다."),
+
     // 소셜 로그인 도메인 오류 코드
     SOCIAL_TOKEN_GET_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "해당하는 소셜 유저 토큰을 가져오는데 실패했습니다."),
     SOCIAL_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 소셜 유저 데이터를 가져오는데 실패했습니다."),
