@@ -1,9 +1,12 @@
 package com.example.demo.domain.column.repository;
 
+import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.column.entity.BoardColumn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -11,9 +14,19 @@ import java.util.Optional;
 // BoardColumn 엔티티에 대한 DB 엑세스, CRUD, 커스텀 쿼리(EX.findByName) 지원
 public interface ColumnRepository extends JpaRepository<BoardColumn, Long> {
 
-    boolean existsByName(String name); // 이미 존재하는 '상태 이름' 을 확인하기 위한 메서드
+    // 특정 보드의 특정 컬럼을 조회
+    Optional<Object> findByIdAndBoard(Long columnId, Board board);
 
-    // ColumnService 클래스에서 현재 최대 순서 값을 조회한 후 1을 더하는 방법을 사용하기 위해 메소드 추가
-    @Query("SELECT MAX(c.order) FROM BoardColumn c") // BoardColumn 엔티티의 order 속성 값 중 최대 값 선택
-    Optional<Long> findMaxOrder(); // 결과가 없을 수도 있기에 Optional을 사용하여 안전하게 처리
+    // 특정 보드 내에서 컬림 이름의 중복을 확인하는 메서드
+    boolean existsByNameAndBoard(String name, Board board);
+
+
+    // 특정 보드 내에서 최대 순서 값을 찾음
+    // 새 컬럼 추가 시 사용할 메서드
+    @Query("SELECT MAX(c.order) FROM BoardColumn c WHERE c.board = :board")
+    Optional<Long> findMaxOrderByBoard(@Param("board") Board board);
+
+    // 특정 보드의 모든 컬럼을 순서대로 조회
+    @Query("SELECT c FROM BoardColumn c WHERE c.board = :board ORDER BY c.order")
+    List<BoardColumn> findAllByBoardOrderByOrder(@Param("board") Board board);
 }
