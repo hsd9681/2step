@@ -56,4 +56,9 @@ public class Board {
     public void setManager (User user) {
         this.permissions.add(new Permission(user, this, PermissionType.MANAGER));
     }
+
+    // 보드에 사용자 추가 시 : 해당 보드의 user로 추가하는 메서드
+    public void setUser (User user) {
+        this.permissions.add(new Permission(user, this, PermissionType.USER));
+    }
 }
