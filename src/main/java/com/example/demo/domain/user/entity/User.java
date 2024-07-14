@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class User {
     private String refreshToken;
 
     // User(1) : Permission(N)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
 
     @Builder
@@ -43,6 +44,7 @@ public class User {
     }
 
     // 사용자의 권한을 반환하는 역할
+    @Transactional
     public PermissionType getPermission() {
         // permissions 가 null 이거나 리스타가 비어 있는 경우 USER 권한 반환
         // null => 리스트가 초기화되지 않았거나 객체가 할당되지 않은 상태를 체크

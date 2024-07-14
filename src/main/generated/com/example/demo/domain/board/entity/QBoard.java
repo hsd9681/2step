@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -24,6 +25,8 @@ public class QBoard extends EntityPathBase<Board> {
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath intro = createString("intro");
+
+    public final ListPath<com.example.demo.domain.permission.entity.Permission, com.example.demo.domain.permission.entity.QPermission> permissions = this.<com.example.demo.domain.permission.entity.Permission, com.example.demo.domain.permission.entity.QPermission>createList("permissions", com.example.demo.domain.permission.entity.Permission.class, com.example.demo.domain.permission.entity.QPermission.class, PathInits.DIRECT2);
 
     public QBoard(String variable) {
         super(Board.class, forVariable(variable));

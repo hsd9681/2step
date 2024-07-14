@@ -26,7 +26,7 @@ public class BoardColumn {
     private String name; // 상태 이름
 
     @Column(nullable = false)
-    private Long order; // 컬럼의 순서
+    private Long orders; // 컬럼의 순서
 
     // Board(1) : Column(N)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,21 +34,21 @@ public class BoardColumn {
     private Board board;
 
     // Column(1) : Card(N)
-    @OneToMany(mappedBy = "boardcolumn", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "boardColumn", cascade = CascadeType.ALL)
     private List<Card> cards;
 
     // 생성자 추가
-    public BoardColumn(String name, Long order, Board board) {
+    public BoardColumn(String name, Long orders, Board board) {
         this.name = name;
-        this.order = order;
+        this.orders = orders;
         this.board = board;
     }
 
     // 순서 변경 메서드
-    public void changeOrder(Long newOrder) {
-        if (newOrder == null || newOrder < 1) {
+    public void changeOrders(Long newOrders) {
+        if (newOrders == null || newOrders < 1) {
             throw new CustomException(ErrorCode.ORDER_MUST_BE_POSITIVE);
         }
-        this.order = newOrder;
+        this.orders = newOrders;
     }
 }
