@@ -13,7 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -24,6 +26,8 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsService;
+    private final AuthenticationFailureHandler failureHandler;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -38,7 +42,7 @@ public class WebSecurityConfig {
 
     @Bean // 인증 필터
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository, failureHandler);
         filter.setAuthenticationManager(authenticationManager());
         return filter;
     }
@@ -46,11 +50,6 @@ public class WebSecurityConfig {
     @Bean // 인가 필터
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
-    }
-
-    @Bean
-    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean
@@ -75,7 +74,10 @@ public class WebSecurityConfig {
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling((handler) -> handler.authenticationEntryPoint(customAuthenticationEntryPoint()));
+
+        http.exceptionHandling(
+                (handler) -> handler.authenticationEntryPoint(authenticationEntryPoint)
+        );
 
         return http.build();
     }
