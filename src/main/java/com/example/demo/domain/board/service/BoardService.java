@@ -7,6 +7,7 @@ import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.dto.InviteRequestDto;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
+import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.permission.repository.PermissionRepository;
@@ -107,4 +108,6 @@ public class BoardService {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 보드를 찾을 수 없습니다: " + boardId));
     }
+
+
 }

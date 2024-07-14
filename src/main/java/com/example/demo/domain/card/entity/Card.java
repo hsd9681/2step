@@ -31,20 +31,26 @@ public class Card{
     private  String worker;
 
     @ManyToOne
-    @JoinColumn(name = "boardcolumn_id")
+    @JoinColumn(name = "boardcolumn_id", nullable = false)
     private BoardColumn boardColumn;
 
-    public Card(CardRequestDto requestDto) {
+    public Card(CardRequestDto requestDto, String username, BoardColumn boardColumn) {
         this.title = requestDto.getTitle();
-        this.status = requestDto.getStatus();
+        this.status = boardColumn.getName();
         this.content = requestDto.getContent();
         this.deadline = requestDto.getDeadline();
-        this.worker = requestDto.getWorker();
+        this.worker = username;
+        this.boardColumn = boardColumn;
     }
-    public void update(CardRequestDto requestDto) {
+    public void update(CardRequestDto requestDto, String username, BoardColumn boardColumn ) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.deadline = requestDto.getDeadline();
-        this.worker = requestDto.getWorker();
+        this.worker = username;
+        this.boardColumn = boardColumn;
+    }
+
+    public String getStatus(){
+        return this.boardColumn.getName();
     }
 }
