@@ -1,16 +1,21 @@
 package com.example.demo.domain.board.service;
 
+import com.example.demo.common.exception.CustomException;
+import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
 import com.example.demo.domain.permission.entity.Permission;
+import com.example.demo.domain.permission.entity.PermissionType;
+import com.example.demo.domain.permission.repository.PermissionRepository;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserService userService;
+    private final PermissionRepository permissionRepository;
 
     // 보드 생성
     public BoardResponseDto createBoard(BoardRequestDto requestDto, String username) {
@@ -32,13 +38,14 @@ public class BoardService {
 
     // 보드 조회
     public List<BoardResponseDto> getBoard(String username) {
-//        // username을 가진 board 전체 조회 : 일반유저와 매니저 모두 조회 가능 - 본인이 속한 모든 보드 조회하기
-//        User user = userService.findUserByUsername(username);
-//        Long userid = user.getId();
-//
-//        List<BoardResponseDto> boards = boardRepository.findAllByUserId(userid);
-//        return boards;
-        return null;
+        // username을 가진 board 전체 조회 : 일반유저와 매니저 모두 조회 가능 - 본인이 속한 모든 보드 조회하기
+        User user = userService.findUserByUsername(username);
+        Long userid = user.getId();
+
+        List<Board> boards = boardRepository.findByPermissions_User_Id(userid);
+        return boards.stream()
+                .map(BoardResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     // 보드 수정
@@ -47,9 +54,17 @@ public class BoardService {
         User user = userService.findUserByUsername(username);
         Long userid = user.getId();
 
-        Board board = boardRepository.getBoardById(boardId);
-        board.update(requestDto.getTitle(), requestDto.getContent());
-        return new BoardResponseDto(board.getId(), board.getBoardName(), board.getIntro());
+        Permission permission = permissionRepository.findByUser_IdAndBoard_Id(userid, boardId);
+
+        if (permission.getAuthority() == PermissionType.MANAGER) { // user = manager 인 경우
+            Board board = boardRepository.getBoardById(boardId);
+
+            board.update(requestDto.getTitle(), requestDto.getContent());
+            return new BoardResponseDto(board.getId(), board.getBoardName(), board.getIntro());
+
+        } else {
+            throw new CustomException(ErrorCode.USER_NOT_MANAGER);
+        }
     }
 
     // 보드 삭제
@@ -57,8 +72,15 @@ public class BoardService {
         // 매니저만 삭제 가능
         // 확인 메세지 출력 후 확인 버튼 누르면 삭제 되도록 단계 거치기
         User user = userService.findUserByUsername(username);
+        Long userid = user.getId();
 
-        boardRepository.deleteById(boardId);
+        Permission permission = permissionRepository.findByUser_IdAndBoard_Id(userid, boardId);
+
+        if (permission.getAuthority() == PermissionType.MANAGER) {
+            boardRepository.deleteById(boardId);
+        } else {
+            throw new CustomException(ErrorCode.USER_NOT_MANAGER);
+        }
     }
 
     // 사용자 초대
@@ -68,5 +90,13 @@ public class BoardService {
         User invitedUser = userService.findUserByUsername(invitedUsername); // 초대 할 사용자
 
 //        Permission permission
+    }
+
+
+    // 주어진 baordId로 Board 객체를 조회 (특정 보드 조회)
+    // 존재하지 않는 경우 예외처리
+    public Board findByBoardId(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 보드를 찾을 수 없습니다: " + boardId));
     }
 }
