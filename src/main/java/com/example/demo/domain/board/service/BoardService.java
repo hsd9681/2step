@@ -4,6 +4,7 @@ import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
+import com.example.demo.domain.board.dto.InviteRequestDto;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
 import com.example.demo.domain.permission.entity.Permission;
@@ -84,17 +85,24 @@ public class BoardService {
     }
 
     // 사용자 초대
-    public void invite(Long boardId, String username, String invitedUsername) {
+    public void invite(Long boardId, String username, InviteRequestDto requestDto) {
         Board board = boardRepository.getBoardById(boardId);
         User user = userService.findUserByUsername(username); // 초대하는 사용자 : 권한이 매니저인지 확인
-        User invitedUser = userService.findUserByUsername(invitedUsername); // 초대 할 사용자
+        Long userid = user.getId();
 
-//        Permission permission
+        String invitedUsername = requestDto.getUsername(); // 초대 할 사용자
+        User invitedUser = userService.findUserByUsername(invitedUsername);
+
+        Permission permission = permissionRepository.findByUser_IdAndBoard_Id(userid, boardId);
+
+        if (permission.getAuthority() == PermissionType.MANAGER) {
+            board.setUser(invitedUser);
+            boardRepository.save(board);
+        } else {
+            throw new CustomException(ErrorCode.USER_NOT_MANAGER);
+        }
     }
 
-
-    // 주어진 baordId로 Board 객체를 조회 (특정 보드 조회)
-    // 존재하지 않는 경우 예외처리
     public Board findByBoardId(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 보드를 찾을 수 없습니다: " + boardId));
