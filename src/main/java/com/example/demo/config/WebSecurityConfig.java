@@ -1,10 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.domain.user.repository.UserRepository;
-import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.JwtAuthorizationFilter;
-import com.example.demo.security.JwtUtil;
-import com.example.demo.security.UserDetailsServiceImpl;
+import com.example.demo.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -52,6 +49,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf((csrf) -> csrf.disable());
@@ -73,6 +75,7 @@ public class WebSecurityConfig {
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling((handler) -> handler.authenticationEntryPoint(customAuthenticationEntryPoint()));
 
         return http.build();
     }

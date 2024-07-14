@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -94,8 +95,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException failed) {
-        System.out.println("비밀번호가 잘못 된듯");
-        response.setStatus(401);
+            AuthenticationException failed) throws ServletException, IOException {
+        getFailureHandler().onAuthenticationFailure(request, response, failed);
     }
 }
