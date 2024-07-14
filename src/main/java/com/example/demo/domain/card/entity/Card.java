@@ -1,6 +1,7 @@
 package com.example.demo.domain.card.entity;
 
 import com.example.demo.domain.card.dto.CardRequestDto;
+import com.example.demo.domain.column.entity.BoardColumn;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,10 @@ public class Card{
 
     @Column(name="worker", nullable = true)
     private  String worker;
+
+    @ManyToOne
+    @JoinColumn(name = "boardcolumn_id")
+    private BoardColumn boardColumn;
 
     public Card(CardRequestDto requestDto) {
         this.title = requestDto.getTitle();

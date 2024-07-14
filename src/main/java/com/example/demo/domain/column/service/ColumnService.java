@@ -49,7 +49,7 @@ public class ColumnService {
         }
 
         // 새 컬럼의 순서 결정 (보드 내에서의 순서)
-        Long maxOrder = columnRepository.findMaxOrderByBoard(board).orElse(0L);
+        Long maxOrder = columnRepository.findMaxOrdersByBoard(board).orElse(0L);
         Long newOrder = maxOrder + 1;
 
         // BoardColumn 객체 생성
@@ -130,7 +130,7 @@ public class ColumnService {
         }
 
         Board board = boardService.findByBoardId(boardId);
-        List<BoardColumn> boardColumns = columnRepository.findAllByBoardOrderByOrder(board);
+        List<BoardColumn> boardColumns = columnRepository.findAllByBoardOrdersByOrder(board);
 
         // 입력된 컬럼 ID들의 유효성을 검사
         if (boardColumns.size() != columnIds.size() || !boardColumns.stream().map(BoardColumn::getId).collect(Collectors.toSet()).equals(new HashSet<>(columnIds))) {
@@ -145,7 +145,7 @@ public class ColumnService {
                     .findFirst()
                     // 찾을 수 없는 id 값을 나타내기 위해 임식적으로 IllegalArgumentException 처리
                     .orElseThrow(() -> new IllegalArgumentException("컬럼을 찾을 수 없습니다: " + id));
-            boardColumn.changeOrder((long) (i + 1));
+            boardColumn.changeOrders((long) (i + 1));
         }
 
         // 변경된 컬럼들을 저장하고 DTO로 변환하여 반환
@@ -160,7 +160,7 @@ public class ColumnService {
         return ResponseColumnDto.builder()
                 .id(boardColumn.getId())
                 .name(boardColumn.getName())
-                .order(boardColumn.getOrder())
+                .order(boardColumn.getOrders())
                 .build();
     }
 }
