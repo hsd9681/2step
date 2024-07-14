@@ -163,4 +163,8 @@ public class ColumnService {
                 .order(boardColumn.getOrders())
                 .build();
     }
+
+    public BoardColumn findStatus(String status) {
+        return columnRepository.findByName(status).orElseThrow(()->new CustomException(ErrorCode.COLUMN_NOT_FOUND));
+    }
 }

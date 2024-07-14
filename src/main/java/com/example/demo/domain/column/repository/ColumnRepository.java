@@ -19,8 +19,6 @@ public interface ColumnRepository extends JpaRepository<BoardColumn, Long> {
 
     // 특정 보드 내에서 컬림 이름의 중복을 확인하는 메서드
     boolean existsByNameAndBoard(String name, Board board);
-
-
     // 특정 보드 내에서 최대 순서 값을 찾음
     // 새 컬럼 추가 시 사용할 메서드
     @Query("SELECT MAX(c.orders) FROM BoardColumn c WHERE c.board = :board")
@@ -29,4 +27,6 @@ public interface ColumnRepository extends JpaRepository<BoardColumn, Long> {
     // 특정 보드의 모든 컬럼을 순서대로 조회
     @Query("SELECT c FROM BoardColumn c WHERE c.board = :board ORDER BY c.orders")
     List<BoardColumn> findAllByBoardOrdersByOrder(@Param("board") Board board);
+
+    Optional<BoardColumn> findByName(String name);
 }

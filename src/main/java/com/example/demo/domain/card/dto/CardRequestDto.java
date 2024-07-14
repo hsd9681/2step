@@ -14,5 +14,4 @@ public class CardRequestDto {
     private String status;
     private String content;
     private String deadline;
-    private String worker;
 }
