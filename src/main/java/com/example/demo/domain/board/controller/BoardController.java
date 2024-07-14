@@ -2,6 +2,7 @@ package com.example.demo.domain.board.controller;
 
 import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
+import com.example.demo.domain.board.dto.InviteRequestDto;
 import com.example.demo.domain.board.service.BoardService;
 import com.example.demo.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -49,9 +50,9 @@ public class BoardController {
     }
 
     // 보드 초대
-    @PostMapping("/{board_id}/invite")
-    public ResponseEntity<String> invite(@PathVariable Long boardId, @AuthenticationPrincipal UserDetails userDetails, @RequestBody String username) {
-        boardService.invite(boardId, userDetails.getUsername(), username);
+    @PostMapping("/{boardId}/invite")
+    public ResponseEntity<String> invite(@PathVariable Long boardId, @AuthenticationPrincipal UserDetails userDetails, @RequestBody InviteRequestDto inviteRequestDto) {
+        boardService.invite(boardId, userDetails.getUsername(), inviteRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body("사용자가 추가되었습니다.");
     }
 
