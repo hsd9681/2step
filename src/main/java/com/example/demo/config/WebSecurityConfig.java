@@ -1,10 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.domain.user.repository.UserRepository;
-import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.JwtAuthorizationFilter;
-import com.example.demo.security.JwtUtil;
-import com.example.demo.security.UserDetailsServiceImpl;
+import com.example.demo.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -27,6 +26,8 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsService;
+    private final AuthenticationFailureHandler failureHandler;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -41,7 +42,7 @@ public class WebSecurityConfig {
 
     @Bean // 인증 필터
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository, failureHandler);
         filter.setAuthenticationManager(authenticationManager());
         return filter;
     }
@@ -66,13 +67,20 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/user/signup", // 회원가입[POST]
                                 "/api/user/login", // 로그인[POST]
-                                "/api/user/refresh" // 토큰 재발급[POST]
+                                "/api/user/refresh", // 토큰 재발급[POST]
+                                "/api/user/login-page",
+                                "/api/user/signup-page",
+                                "api/user/main-page"
                         ).permitAll()
                         .anyRequest().authenticated()
         );
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.exceptionHandling(
+                (handler) -> handler.authenticationEntryPoint(authenticationEntryPoint)
+        );
 
         return http.build();
     }

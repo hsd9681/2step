@@ -3,17 +3,17 @@ package com.example.demo.domain.card.service;
 
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
+import com.example.demo.domain.board.service.BoardService;
 import com.example.demo.domain.card.dto.CardRequestDto;
 import com.example.demo.domain.card.dto.CardResponseDto;
 import com.example.demo.domain.card.entity.Card;
 import com.example.demo.domain.card.repository.CardRepository;
-import jakarta.validation.Valid;
+import com.example.demo.domain.column.entity.BoardColumn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final BoardService boardService;
 
     public List<CardResponseDto> getCards() {
         List<CardResponseDto> result = new ArrayList<>();
@@ -30,21 +31,22 @@ public class CardService {
             List<Card> cards = cardRepository.findByStatus(status);
             result.addAll(cards.stream()
                     .map(CardResponseDto::new)
-                    .collect(Collectors.toList()));
+                    .toList());
         }
 
         return result;
     }
 
-    public CardResponseDto createCard(CardRequestDto requestDto) {
-        Card card =cardRepository.save(new Card(requestDto));
+    public CardResponseDto createCard(CardRequestDto requestDto, String username, BoardColumn boardColumn) {
+        Card card =cardRepository.save(new Card(requestDto ,username ,boardColumn));
         return new CardResponseDto(card);
     }
 
-    public CardResponseDto updateCard(Long cardId, CardRequestDto requestDto) {
+    public CardResponseDto updateCard(Long cardId, CardRequestDto requestDto, String username) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CARD_NOT_FOUND));
-        card.update(requestDto);
+        BoardColumn boardColumn = new BoardColumn();
+        card.update(requestDto, username, boardColumn);
         cardRepository.save(card);
         return new CardResponseDto(card);
     }
@@ -58,4 +60,6 @@ public class CardService {
     public Card findById(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(() -> new CustomException(ErrorCode.CARD_NOT_FOUND));
     }
+
+
 }

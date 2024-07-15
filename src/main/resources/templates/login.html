@@ -17,7 +17,7 @@
 <div id="login-form">
     <div id="login-title">Log into Select Shop</div>
     <br>
-    <button id="login-id-btn" onclick="location.href='/api/user/signup'">
+    <button id="login-id-btn" onclick="location.href='/api/user/signup-page'">
         회원 가입하기
     </button>
     <div>
@@ -58,15 +58,15 @@
             data: JSON.stringify({username: username, password: password}),
         })
             .done(function (res, status, xhr) {
-                const token = xhr.getResponseHeader('Authorization');
+                const token = xhr.getResponseHeader('AccessToken');
 
-                Cookies.set('Authorization', token, {path: '/'})
+                Cookies.set('AccessToken', token, {path: '/'})
 
                 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', token);
+                    jqXHR.setRequestHeader('AccessToken', token);
                 });
 
-                window.location.href = host;
+                window.location.href = `/api/user/main-page`;
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Login Fail");

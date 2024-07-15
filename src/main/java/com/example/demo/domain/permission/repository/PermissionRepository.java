@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
     Permission findByUser_IdAndBoard_Id(Long userid, Long boardId);
+
+    List<Permission> findByBoardId(Long boardId);
 }

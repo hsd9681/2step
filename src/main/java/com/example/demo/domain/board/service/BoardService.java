@@ -7,6 +7,7 @@ import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.dto.InviteRequestDto;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
+import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.permission.repository.PermissionRepository;
@@ -95,11 +96,18 @@ public class BoardService {
 
         Permission permission = permissionRepository.findByUser_IdAndBoard_Id(userid, boardId);
 
-        if (permission.getAuthority() == PermissionType.MANAGER){
+        if (permission.getAuthority() == PermissionType.MANAGER) {
             board.setUser(invitedUser);
             boardRepository.save(board);
         } else {
             throw new CustomException(ErrorCode.USER_NOT_MANAGER);
         }
     }
+
+    public Board findByBoardId(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 보드를 찾을 수 없습니다: " + boardId));
+    }
+
+
 }
