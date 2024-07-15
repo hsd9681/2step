@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity @Table(name = "users")
-@NoArgsConstructor @Getter
+@NoArgsConstructor
+@Getter
 public class User {
 
     @Id
