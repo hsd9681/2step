@@ -55,12 +55,11 @@ public class Card {
         this.user = user;
     }
 
-    public void update(CardRequestDto requestDto, String username, BoardColumn boardColumn, User user) {
+    public void update(CardRequestDto requestDto, String username, User user) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.deadline = requestDto.getDeadline();
         this.worker = username;
-        this.boardColumn = boardColumn;
         this.user = user;
     }
 

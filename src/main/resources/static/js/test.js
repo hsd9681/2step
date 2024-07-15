@@ -371,6 +371,18 @@ function addCard(columnElement) {
                 toggleButton.textContent = '▼ 댓글 보기';
                 newCard.appendChild(toggleButton);
 
+                // 수정 버튼 추가
+                const editButton = document.createElement('button');
+                editButton.className = 'edit-card-btn';
+                editButton.textContent = '수정';
+                newCard.appendChild(editButton);
+
+                // 삭제 버튼 추가
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-card-btn';
+                deleteButton.textContent = '삭제';
+                newCard.appendChild(deleteButton);
+
                 // 댓글 섹션 추가
                 const commentsSection = document.createElement('div');
                 commentsSection.className = 'comments';
@@ -406,6 +418,73 @@ function addCard(columnElement) {
                     }
                 });
 
+                editButton.addEventListener('click', function() {
+                    const newText = prompt('수정할 카드 내용을 입력하세요:', data.content);
+                    if (newText !== null && newText.trim() !== '') {
+                        const cardId = data.id; // 수정할 카드의 ID
+                        const auth = getToken();
+
+                        fetch(`/api/board/card/${cardId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'AccessToken': auth
+                            },
+                            body: JSON.stringify({
+                                content: newText.trim(),
+                                title: title.trim(), // 제목 업데이트
+                                status: status.trim() // 상태 업데이트
+                            })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('카드 수정 실패');
+                                }
+                                return response.json();
+                            })
+                            .then(updatedData => {
+                                cardContent.textContent = updatedData.content;
+                            })
+                            .catch(error => {
+                                alert(error.message);
+                            });
+                    } else {
+                        alert('카드 내용을 입력해주세요.');
+                    }
+                });
+
+
+
+                // 삭제 버튼 클릭 이벤트 처리
+                deleteButton.addEventListener('click', function() {
+                    const confirmDelete = confirm('정말로 이 카드를 삭제하시겠습니까?');
+                    if (confirmDelete) {
+                        const cardId = data.id; // 삭제할 카드의 ID
+                        const auth = getToken();
+
+                        fetch(`/api/board/card/${cardId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'AccessToken': auth
+                            }
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('카드 삭제 실패');
+                                }
+                                return response.text();
+                            })
+                            .then(result => {
+                                alert(result); // 삭제 성공 메시지를 alert로 보여줄 수 있음
+                                newCard.remove();
+                            })
+                            .catch(error => {
+                                alert(error.message);
+                            });
+                    }
+                });
+
                 // 댓글 섹션 추가
                 newCard.appendChild(commentsSection);
 
@@ -419,8 +498,6 @@ function addCard(columnElement) {
         alert('카드 내용을 입력해주세요.');
     }
 }
-
-
 
 function getToken() {
     let auth = Cookies.get('AccessToken');
