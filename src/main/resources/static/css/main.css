@@ -54,6 +54,12 @@ html {
     height: 25px;
     margin-left: 36px;
 }
+.delete-col-btn{
+    margin-top: 40px;
+}
+.add-card-btn{
+    margin-top: 40px;
+}
 .board {
     width: 100%;
     height: 10%;

@@ -204,6 +204,7 @@ document.getElementById('col-add').addEventListener('click', function() {
         alert('올바른 컬럼 유형을 입력하세요.');
     }
 });
+
 function deleteColumn(colElement) {
     const colId = colElement.getAttribute('data-col-id');
     const auth = getToken();
@@ -233,7 +234,7 @@ function deleteColumn(colElement) {
 
 
 let boardId;
-
+//************************************************************************************************************************
 // 보드 클릭 이벤트에 유저 목록을 가져오는 기능 추가
 document.querySelector('.list-view').addEventListener('click', function(event) {
     const board = event.target.closest('.board');
@@ -243,21 +244,18 @@ document.querySelector('.list-view').addEventListener('click', function(event) {
         fetchColumnList(boardId);
     }
 });
+//************************************************************************************************************************
 
-let columnList = [];
 function fetchColumnList(boardId) {
-
-    const colListView = document.querySelector('.col-view');
-    colListView.innerHTML = ''; // 기존 목록 초기화
-
     const colView = document.querySelector('.col-view');
-    const existingCols = colView.querySelectorAll('.col-box').length;
+    colView.innerHTML = ''; // 기존 목록 초기화
 
     const auth = getToken();
     fetch(`/api/board${boardId}/col`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json', 'AccessToken': auth
+            'Content-Type': 'application/json',
+            'AccessToken': auth
         }
     })
         .then(response => {
@@ -267,22 +265,113 @@ function fetchColumnList(boardId) {
             return response.json();
         })
         .then(data => {
-            columnList = data;
+            data.forEach((column, index) => {
+                const newCol = document.createElement('div');
+                const className = `col${index + 1} cell col-box`;
+                newCol.className = className;
+                newCol.setAttribute('data-col-id', column.id);
+                newCol.innerHTML = `
+                    <div class="col-text">${column.name.trim()}</div>
+                    <button class="delete-col-btn">삭제</button>
+                    <button class="add-card-btn">카드 추가</button>
+                    <div class="card-container"></div> <!-- 카드를 담을 컨테이너 -->
+                `;
+                colView.appendChild(newCol);
+
+                // 삭제 버튼 클릭 이벤트 리스너 추가
+                const deleteButton = newCol.querySelector('.delete-col-btn');
+                deleteButton.addEventListener('click', function() {
+                    deleteColumn(newCol); // 삭제 함수 호출
+                });
+
+                // 카드 추가 버튼 클릭 이벤트 리스너 추가
+                const addCardButton = newCol.querySelector('.add-card-btn');
+                addCardButton.addEventListener('click', function() {
+                    addCard(newCol);
+                });
+                // 각 컬럼에 속한 카드들을 조회하여 UI에 추가
+                fetchCardList(boardId, column.id, newCol.querySelector('.card-container'));
+            });
         })
         .catch(error => {
             alert(error.message);
         });
+}
 
-    const newCol = document.createElement('div');
-    for(let i = 0; i < columnList.length; i++) {
-        const className = 'col' + (existingCols + i) + ' cell col-box';
-        newCol.innerHTML += `<div class="${className}">
-                            <div class="col-text">${columnList[i].name.trim()}</div>
-                            </div>`;
-        console.log(columnList[i]);
-        colView.appendChild(newCol);
-    }
+function fetchCardList(boardId, colId, cardContainer) {
+    const auth = getToken();
+    fetch(`/api/board/card`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'AccessToken': auth
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('카드 조회 실패');
+            }
+            return response.json();
+        })
+        .then(data => {
+            data.forEach(card => {
+                const newCard = document.createElement('div');
+                newCard.className = 'card';
+                newCard.setAttribute('data-card-id', card.id); // 카드 ID 설정
+                newCard.innerHTML = `
+                    <div class="card-text">${card.title}</div>
+                    <button class="delete-card-btn">삭제</button>
+                    <button class="view-comments-btn">댓글 보기</button>
+                    <div class="comment-container"></div> <!-- 댓글을 담을 컨테이너 -->
+                `;
+                cardContainer.appendChild(newCard);
 
+                // 삭제 버튼 클릭 이벤트 리스너 추가
+                const deleteCardButton = newCard.querySelector('.delete-card-btn');
+                deleteCardButton.addEventListener('click', function() {
+                    deleteCard(newCard); // 삭제 함수 호출
+                });
+
+                // 댓글 보기 버튼 클릭 이벤트 리스너 추가
+                const viewCommentsButton = newCard.querySelector('.view-comments-btn');
+                viewCommentsButton.addEventListener('click', function() {
+                    fetchCommentList(boardId, colId, card.id, newCard.querySelector('.comment-container'));
+                });
+            });
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+}
+
+// 카드의 댓글 목록을 조회하는 함수
+function fetchCommentList(cardId) {
+    const commentContainer = document.querySelector(`.card[data-card-id="${cardId}"] .comment-container`);
+    const auth = getToken();
+    fetch(`/api/card/${cardId}/comment`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'AccessToken': auth
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('댓글 조회 실패');
+            }
+            return response.json();
+        })
+        .then(data => {
+            data.forEach(comment => {
+                const newComment = document.createElement('div');
+                newComment.className = 'comment';
+                newComment.textContent = comment.text;
+                commentContainer.appendChild(newComment);
+            });
+        })
+        .catch(error => {
+            alert(error.message);
+        });
 }
 
 
@@ -367,7 +456,6 @@ function inviteUser(boardId, inviteData) {
 
 
 
-// 카드 내용 추가 함수
 function addCard(columnElement) {
     const cardText = prompt('카드 내용을 입력하세요:');
     if (cardText !== null && cardText.trim() !== '') {
@@ -434,13 +522,38 @@ function addCard(columnElement) {
                 newCard.appendChild(commentButton);
 
                 // 댓글 달기 버튼 클릭 이벤트 처리
+                // 댓글 달기 버튼 클릭 이벤트 처리
                 commentButton.addEventListener('click', function() {
                     const commentText = prompt('댓글 내용을 입력하세요:');
                     if (commentText !== null && commentText.trim() !== '') {
-                        const commentElement = document.createElement('div');
-                        commentElement.className = 'comment';
-                        commentElement.textContent = commentText.trim();
-                        commentsSection.appendChild(commentElement);
+                        const auth = getToken();
+                        const cardId = data.id; // 카드의 ID
+
+                        fetch(`/api/cards/${cardId}/comments`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'AccessToken': auth
+                            },
+                            body: JSON.stringify({
+                                content: commentText.trim()
+                            })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('댓글 추가 실패');
+                                }
+                                return response.json();
+                            })
+                            .then(commentData => {
+                                const commentElement = document.createElement('div');
+                                commentElement.className = 'comment';
+                                commentElement.textContent = `${commentData.username}: ${commentData.content}`;
+                                commentsSection.appendChild(commentElement);
+                            })
+                            .catch(error => {
+                                alert(error.message);
+                            });
                     } else {
                         alert('댓글 내용을 입력해주세요.');
                     }
@@ -492,9 +605,6 @@ function addCard(columnElement) {
                     }
                 });
 
-
-
-                // 삭제 버튼 클릭 이벤트 처리
                 deleteButton.addEventListener('click', function() {
                     const confirmDelete = confirm('정말로 이 카드를 삭제하시겠습니까?');
                     if (confirmDelete) {
@@ -537,6 +647,8 @@ function addCard(columnElement) {
         alert('카드 내용을 입력해주세요.');
     }
 }
+
+
 
 function getToken() {
     let auth = Cookies.get('AccessToken');
