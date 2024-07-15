@@ -95,6 +95,62 @@ document.querySelector('.board-add').addEventListener('click', function() {
         alert('제목과 한 줄 설명을 모두 입력해야 합니다.');
     }
 });
+//보드 컬럼 관련 코드
+document.getElementById('col-add').addEventListener('click', function() {
+    const colView = document.querySelector('.col-view');
+    const existingCols = colView.querySelectorAll('.col-box').length;
+    if (existingCols >= 4) {
+        alert('최대 4개의 컬럼만 추가할 수 있습니다.');
+        return;
+    }
+
+    const columnTypes = ['시작전', '진행중', '완료', '긴급'];
+    const name = prompt('시작전, 진행중, 완료, 긴급 중 하나를 입력하세요:');
+    const obj = {name : name}
+    if (name !== null && columnTypes.includes(name.trim())) {
+        var auth = getToken();
+        fetch(`/api/board/${boardId}/col`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 'AccessToken': auth
+            },
+            body: JSON.stringify(obj)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('컬럼 생성 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('성공성공')
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+
+        const newCol = document.createElement('div');
+        newCol.className = 'col' + (existingCols + 1) + ' cell col-box';
+        newCol.innerHTML = `<div class="col-text">${name.trim()}</div>`;
+        colView.appendChild(newCol);
+    } else {
+        alert('올바른 컬럼 유형을 입력하세요.');
+    }
+});
+
+let boardId;
+
+// 보드 클릭 이벤트에 유저 목록을 가져오는 기능 추가
+document.querySelector('.list-view').addEventListener('click', function(event) {
+    const board = event.target.closest('.board');
+    if (board) {
+
+        boardId = board.getAttribute('data-board-id');
+        fetchUserList(boardId); // 클릭한 보드의 ID를 넘겨서 유저 목록을 가져옵니다.
+        //컬럼조회
+    }
+});
+
 
 
 // 유저 목록을 가져오는 함수
@@ -129,16 +185,7 @@ function fetchUserList(boardId) {
             alert(error.message);
         });
 }
-let boardId;
-// 보드 클릭 이벤트에 유저 목록을 가져오는 기능 추가
-document.querySelector('.list-view').addEventListener('click', function(event) {
-    const board = event.target.closest('.board');
-    if (board) {
 
-        boardId = board.getAttribute('data-board-id');
-        fetchUserList(boardId); // 클릭한 보드의 ID를 넘겨서 유저 목록을 가져옵니다.
-    }
-});
 document.addEventListener('DOMContentLoaded', function() {
     // 초대 버튼 클릭 이벤트 리스너 설정
     const inviteButtons = document.querySelectorAll('.invite-user-btn');
@@ -184,29 +231,6 @@ function inviteUser(boardId, inviteData) {
             alert(error.message);
         });
 }
-
-
-
-document.getElementById('col-add').addEventListener('click', function() {
-    const colView = document.querySelector('.col-view');
-    const existingCols = colView.querySelectorAll('.col-box').length;
-    if (existingCols >= 4) {
-        alert('최대 4개의 컬럼만 추가할 수 있습니다.');
-        return;
-    }
-
-    const columnTypes = ['시작전', '진행중', '완료', '긴급'];
-    const text = prompt('시작전, 진행중, 완료, 긴급 중 하나를 입력하세요:');
-    if (text !== null && columnTypes.includes(text.trim())) {
-        const newCol = document.createElement('div');
-        newCol.className = 'col' + (existingCols + 1) + ' cell col-box';
-        newCol.innerHTML = `<div class="col-text">${text.trim()}</div>`;
-        colView.appendChild(newCol);
-    } else {
-        alert('올바른 컬럼 유형을 입력하세요.');
-    }
-});
-
 function getToken() {
     let auth = Cookies.get('AccessToken');
     if(auth === undefined) {
