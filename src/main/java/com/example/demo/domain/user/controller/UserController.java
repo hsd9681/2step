@@ -1,7 +1,14 @@
 package com.example.demo.domain.user.controller;
 
+import com.example.demo.domain.board.entity.Board;
+import com.example.demo.domain.board.repository.BoardRepository;
+import com.example.demo.domain.board.service.BoardService;
+import com.example.demo.domain.permission.entity.Permission;
+import com.example.demo.domain.permission.repository.PermissionRepository;
+import com.example.demo.domain.permission.service.PermissionService;
 import com.example.demo.domain.user.dto.RefreshTokenRequestDto;
 import com.example.demo.domain.user.dto.SignupRequestDto;
+import com.example.demo.domain.user.dto.UserResponseDto;
 import com.example.demo.domain.user.service.UserService;
 import com.example.demo.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,8 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -20,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
 
     private final UserService userService;
+    private final PermissionService permissionService;
 
     @GetMapping("/login-page")
     public ModelAndView login(ModelAndView mv){
@@ -55,5 +67,11 @@ public class UserController {
     {
         userService.logout(userDetails);
         return new ResponseEntity<>("로그아웃 성공" , HttpStatus.OK);
+    }
+    // user 찾기
+    @GetMapping("/{boardId}/users")
+    public ResponseEntity<List<UserResponseDto>> getUsersByBoard(@PathVariable Long boardId) {
+        List<UserResponseDto> users = permissionService.getUsersByBoard(boardId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
