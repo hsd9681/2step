@@ -144,13 +144,52 @@ let boardId;
 document.querySelector('.list-view').addEventListener('click', function(event) {
     const board = event.target.closest('.board');
     if (board) {
-
         boardId = board.getAttribute('data-board-id');
         fetchUserList(boardId); // 클릭한 보드의 ID를 넘겨서 유저 목록을 가져옵니다.
-        //컬럼조회
+        fetchColumnList(boardId);
     }
 });
 
+let columnList = [];
+function fetchColumnList(boardId) {
+
+    const colListView = document.querySelector('.col-view');
+    colListView.innerHTML = ''; // 기존 목록 초기화
+
+    const colView = document.querySelector('.col-view');
+    const existingCols = colView.querySelectorAll('.col-box').length;
+
+    const auth = getToken();
+    fetch(`/api/board/${boardId}/col`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json', 'AccessToken': auth
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('컬럼 조회 실패');
+            }
+            return response.json();
+        })
+        .then(data => {
+            columnList = data;
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+
+    const newCol = document.createElement('div');
+    for(let i = 0; i < columnList.length; i++) {
+        const className = 'col' + (existingCols + i) + ' cell col-box';
+        newCol.innerHTML += `<div class="${className}">
+                            <div class="col-text">${columnList[i].name.trim()}</div>
+                            </div>`;
+        console.log(columnList[i]);
+        colView.appendChild(newCol);
+    }
+
+}
 
 
 // 유저 목록을 가져오는 함수

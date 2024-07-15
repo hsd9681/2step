@@ -22,7 +22,7 @@ public class BoardColumn {
     private Long id; // 고유 식별자
 
     // 값이 유일 & null 허용 X
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name; // 상태 이름
 
     @Column(nullable = false)

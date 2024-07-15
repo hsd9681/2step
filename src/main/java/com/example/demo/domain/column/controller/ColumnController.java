@@ -2,6 +2,7 @@ package com.example.demo.domain.column.controller;
 
 import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
+import com.example.demo.domain.column.dto.ResponseFindColumnDto;
 import com.example.demo.domain.column.service.ColumnService;
 import com.example.demo.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -52,5 +53,11 @@ public class ColumnController {
 
         List<ResponseColumnDto> reorderedColumns = columnService.reorderColumns(board_id, columnIds, userDetails.getUser());
         return new ResponseEntity<>(reorderedColumns, HttpStatus.OK);
+    }
+
+    @GetMapping("/{boardId}/col")
+    public ResponseEntity<List<ResponseFindColumnDto>> findAllColumns(@PathVariable("boardId") Long boardId) {
+        List<ResponseFindColumnDto> dtoList = columnService.findAllColumns(boardId);
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 }

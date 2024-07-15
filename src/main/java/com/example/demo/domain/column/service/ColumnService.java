@@ -3,9 +3,11 @@ package com.example.demo.domain.column.service;
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.entity.Board;
+import com.example.demo.domain.board.repository.BoardRepository;
 import com.example.demo.domain.board.service.BoardService;
 import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
+import com.example.demo.domain.column.dto.ResponseFindColumnDto;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.repository.ColumnRepository;
 import com.example.demo.domain.permission.entity.PermissionType;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +28,7 @@ public class ColumnService {
 
     private final ColumnRepository columnRepository;
     private final BoardService boardService;
+    private final BoardRepository boardRepository;
 
 
     // 컬럼 생성 (보드에 컬럼 생성)
@@ -166,5 +170,18 @@ public class ColumnService {
 
     public BoardColumn findStatus(String status) {
         return columnRepository.findByName(status).orElseThrow(()->new CustomException(ErrorCode.COLUMN_NOT_FOUND));
+    }
+
+    public List<ResponseFindColumnDto> findAllColumns(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new NullPointerException("조회된 보드가 없습니다.")
+        );
+        List<BoardColumn> columnList = columnRepository.findAllByBoard(board);
+
+        List<ResponseFindColumnDto> responseColumnDtoList = new ArrayList<>();
+        for(BoardColumn boardColumn : columnList) {
+            responseColumnDtoList.add(new ResponseFindColumnDto(boardColumn));
+        }
+        return responseColumnDtoList;
     }
 }
