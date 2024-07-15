@@ -29,4 +29,6 @@ public interface ColumnRepository extends JpaRepository<BoardColumn, Long> {
     List<BoardColumn> findAllByBoardOrdersByOrder(@Param("board") Board board);
 
     Optional<BoardColumn> findByName(String name);
+
+    List<BoardColumn> findAllByBoard(Board board);
 }
