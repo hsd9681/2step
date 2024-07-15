@@ -143,7 +143,7 @@ document.querySelector('.board-add').addEventListener('click', function() {
 });
 
 
-//보드 컬럼 관련 코드
+// 컬럼 추가 버튼 클릭 이벤트 리스너
 document.getElementById('col-add').addEventListener('click', function() {
     const colView = document.querySelector('.col-view');
     const existingCols = colView.querySelectorAll('.col-box').length;
@@ -178,15 +178,23 @@ document.getElementById('col-add').addEventListener('click', function() {
                 newCol.className = 'col' + (existingCols + 1) + ' cell col-box';
                 newCol.setAttribute('data-col-id', data.id); // 컬럼 ID 설정
                 newCol.innerHTML = `
-                <div class="col-text">${name.trim()}</div>
-                <button class="delete-col-btn">삭제</button>
-            `;
+                    <div class="col-text">${name.trim()}</div>
+                    <button class="delete-col-btn">삭제</button>
+                    <button class="add-card-btn">카드 추가</button>
+                    <div class="card-container"></div> <!-- 카드를 담을 컨테이너 -->
+                `;
                 colView.appendChild(newCol);
 
                 // 삭제 버튼 클릭 이벤트 리스너 추가
                 const deleteButton = newCol.querySelector('.delete-col-btn');
                 deleteButton.addEventListener('click', function() {
                     deleteColumn(newCol); // 삭제 함수 호출
+                });
+
+                // 카드 추가 버튼 클릭 이벤트 리스너 추가
+                const addCardButton = newCol.querySelector('.add-card-btn');
+                addCardButton.addEventListener('click', function() {
+                    addCard(newCol);
                 });
             })
             .catch(error => {
@@ -196,6 +204,41 @@ document.getElementById('col-add').addEventListener('click', function() {
         alert('올바른 컬럼 유형을 입력하세요.');
     }
 });
+
+// 카드 추가 함수
+function addCard(columnElement) {
+    const cardText = prompt('카드 내용을 입력하세요:');
+    if (cardText !== null && cardText.trim() !== '') {
+        const auth = getToken();
+        const columnId = columnElement.getAttribute('data-col-id');
+        fetch(`/api/board/${boardId}/card`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'AccessToken': auth
+            },
+            body: JSON.stringify({ content: cardText.trim(), columnId: columnId })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('카드 추가 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const newCard = document.createElement('div');
+                newCard.className = 'card';
+                newCard.textContent = data.content; // 백엔드에서 반환한 카드 내용 사용
+                columnElement.querySelector('.card-container').appendChild(newCard);
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    } else {
+        alert('카드 내용을 입력해주세요.');
+    }
+}
+
 
 function deleteColumn(colElement) {
     const colId = colElement.getAttribute('data-col-id');
@@ -318,6 +361,117 @@ function inviteUser(boardId, inviteData) {
             alert(error.message);
         });
 }
+
+
+
+// 카드 내용 추가 함수
+function addCard(columnElement) {
+    const cardText = prompt('카드 내용을 입력하세요:');
+    if (cardText !== null && cardText.trim() !== '') {
+        const auth = getToken();
+        const columnId = columnElement.getAttribute('data-col-id');
+        const title = '카드 제목'; // 예시로 고정 값 입력
+        const status = '시작전'; // 예시로 고정 값 입력
+
+        fetch(`/api/board/card`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'AccessToken': auth
+            },
+            body: JSON.stringify({
+                title: title,
+                status: status,
+                content: cardText.trim()
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('카드 추가 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const newCard = document.createElement('div');
+                newCard.className = 'card';
+
+                // 카드 내용 추가
+                const cardContent = document.createElement('div');
+                cardContent.className = 'card-content';
+                cardContent.textContent = data.content; // 백엔드에서 반환한 카드 내용 사용
+                newCard.appendChild(cardContent);
+
+                // 토글 버튼 추가
+                const toggleButton = document.createElement('button');
+                toggleButton.className = 'toggle-comments-btn';
+                toggleButton.textContent = '▼ 댓글 보기';
+                newCard.appendChild(toggleButton);
+
+                // 댓글 섹션 추가
+                const commentsSection = document.createElement('div');
+                commentsSection.className = 'comments';
+                commentsSection.style.display = 'none'; // 초기에는 숨김 처리
+
+                // 댓글 달기 버튼 추가
+                const commentButton = document.createElement('button');
+                commentButton.className = 'add-comment-btn';
+                commentButton.textContent = '댓글 달기';
+                newCard.appendChild(commentButton);
+
+                // 댓글 달기 버튼 클릭 이벤트 처리
+                commentButton.addEventListener('click', function() {
+                    const commentText = prompt('댓글 내용을 입력하세요:');
+                    if (commentText !== null && commentText.trim() !== '') {
+                        const commentElement = document.createElement('div');
+                        commentElement.className = 'comment';
+                        commentElement.textContent = commentText.trim();
+                        commentsSection.appendChild(commentElement);
+                    } else {
+                        alert('댓글 내용을 입력해주세요.');
+                    }
+                });
+
+                // 토글 버튼 클릭 이벤트 처리
+                toggleButton.addEventListener('click', function() {
+                    if (commentsSection.style.display === 'none') {
+                        commentsSection.style.display = 'block';
+                        toggleButton.textContent = '▲ 댓글 숨기기';
+                    } else {
+                        commentsSection.style.display = 'none';
+                        toggleButton.textContent = '▼ 댓글 보기';
+                    }
+                });
+
+                // 댓글 섹션 추가
+                newCard.appendChild(commentsSection);
+
+                // 카드 요소를 컬럼에 추가
+                columnElement.appendChild(newCard);
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    } else {
+        alert('카드 내용을 입력해주세요.');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function getToken() {
     let auth = Cookies.get('AccessToken');
     if(auth === undefined) {
