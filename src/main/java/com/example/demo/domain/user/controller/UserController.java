@@ -5,13 +5,14 @@ import com.example.demo.domain.user.dto.SignupRequestDto;
 import com.example.demo.domain.user.service.UserService;
 import com.example.demo.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/user")
@@ -19,6 +20,22 @@ import java.util.Objects;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/login-page")
+    public ModelAndView login(ModelAndView mv){
+        mv.setViewName("login");
+        return mv;
+    }
+    @GetMapping("/signup-page")
+    public ModelAndView signup(ModelAndView mv){
+        mv.setViewName("signup");
+        return mv;
+    }
+    @GetMapping("/main-page")
+    public ModelAndView main(ModelAndView mv){
+        mv.setViewName("main");
+        return mv;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignupRequestDto requestDto) {

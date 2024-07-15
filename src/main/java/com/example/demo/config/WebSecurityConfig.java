@@ -67,7 +67,10 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/user/signup", // 회원가입[POST]
                                 "/api/user/login", // 로그인[POST]
-                                "/api/user/refresh" // 토큰 재발급[POST]
+                                "/api/user/refresh", // 토큰 재발급[POST]
+                                "/api/user/login-page",
+                                "/api/user/signup-page",
+                                "api/user/main-page"
                         ).permitAll()
                         .anyRequest().authenticated()
         );

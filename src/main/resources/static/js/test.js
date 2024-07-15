@@ -12,17 +12,46 @@ document.getElementById('member-btn').addEventListener('click', function() {
     document.querySelector('.col3 .col-text').textContent = members[2];
     document.querySelector('.col4 .col-text').textContent = members[3];
 });
-
+// 보드 관련 코드
 document.querySelector('.board-add').addEventListener('click', function() {
-    const text = prompt('Enter text:');
-    if (text !== null && text.trim() !== '') {
-        const newBoard = document.createElement('div');
-        newBoard.className = 'board';
-        newBoard.textContent = text.trim();
-        document.querySelector('.list-view').appendChild(newBoard);
+    const title = prompt('보드 제목을 입력하세요:');
+    const description = prompt('보드 한 줄 설명을 입력하세요:');
+
+    if (title !== null && title.trim() !== '' && description !== null && description.trim() !== '') {
+        const boardData = {
+            title: title.trim(),
+            description: description.trim()
+        };
+
+        // 서버로 데이터를 전송하는 Ajax 요청
+        fetch('/api/board', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(boardData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('보드 생성에 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 성공적으로 보드가 생성된 경우 UI에 반영
+                const newBoard = document.createElement('div');
+                newBoard.className = 'board';
+                newBoard.textContent = data.title; // 백엔드에서 반환한 제목을 사용
+                document.querySelector('.list-view').appendChild(newBoard);
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    } else {
+        alert('제목과 한 줄 설명을 모두 입력해야 합니다.');
     }
 });
-
+//보드관련코드
 document.getElementById('col-add').addEventListener('click', function() {
     const colView = document.querySelector('.col-view');
     const existingCols = colView.querySelectorAll('.col-box').length;
