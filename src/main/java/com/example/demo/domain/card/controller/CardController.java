@@ -1,13 +1,12 @@
 package com.example.demo.domain.card.controller;
 
-
-import com.example.demo.domain.board.service.BoardService;
 import com.example.demo.domain.card.dto.CardRequestDto;
 import com.example.demo.domain.card.dto.CardResponseDto;
 import com.example.demo.domain.card.service.CardService;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.service.ColumnService;
 import com.example.demo.domain.user.entity.User;
+import com.example.demo.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,7 @@ public class CardController {
 
     private final CardService cardService;
     private final ColumnService columnService;
+    private final UserService userService;
 
     @GetMapping("/card")
     public ResponseEntity<List<CardResponseDto>> getCards() {
@@ -32,16 +32,20 @@ public class CardController {
     }
 
     @PostMapping("/card")
-    public ResponseEntity<CardResponseDto> createCard(@RequestBody @Valid CardRequestDto requestDto ,@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<CardResponseDto> createCard(@RequestBody @Valid CardRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
         BoardColumn boardColumn = columnService.findStatus(requestDto.getStatus());
+        User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(cardService.createCard(requestDto, userDetails.getUsername(), boardColumn));
+                .body(cardService.createCard(requestDto, userDetails.getUsername(), boardColumn, user));
     }
+
     @PutMapping("/card/{cardId}")
-    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId,@RequestBody @Valid CardRequestDto requestDto ,@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId, @RequestBody @Valid CardRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(cardService.updateCard(cardId, requestDto, userDetails.getUsername()));
+                .body(cardService.updateCard(cardId, requestDto, userDetails.getUsername(), user));
     }
+
     @DeleteMapping("/card/{cardId}")
     public ResponseEntity<String> deleteCard(@PathVariable Long cardId) {
         cardService.deleteCard(cardId);
