@@ -37,6 +37,16 @@ function fetchBoardList() {
                 newBoard.className = 'board';
                 newBoard.setAttribute('data-board-id', board.id); // 보드 ID 추가
                 newBoard.textContent = board.title; // 백엔드에서 반환한 제목을 사용
+
+                // 삭제 버튼 추가
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '삭제';
+                deleteButton.className = 'delete-board-btn';
+                deleteButton.setAttribute('data-board-id', board.id); // 삭제 버튼에 보드 ID 설정
+                deleteButton.addEventListener('click', deleteBoard); // 삭제 버튼 클릭 이벤트 리스너 추가
+
+
+                newBoard.appendChild(deleteButton); // 보드 요소에 삭제 버튼 추가
                 listView.appendChild(newBoard);
             });
         })
@@ -44,6 +54,32 @@ function fetchBoardList() {
             alert(error.message);
         });
 }
+// 보드 삭제 함수
+function deleteBoard(event) {
+    const boardId = event.target.getAttribute('data-board-id');
+    const auth = getToken();
+    fetch(`/api/board/${boardId}`, {
+        method: 'DELETE',
+        headers: {
+            'AccessToken': auth,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('보드 삭제에 실패했습니다.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 삭제 성공 시 UI에서 보드 제거
+            event.target.closest('.board').remove();
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+}
+
 
 // DOMContentLoaded 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function() {
@@ -86,6 +122,16 @@ document.querySelector('.board-add').addEventListener('click', function() {
                 newBoard.className = 'board';
                 newBoard.setAttribute('data-board-id', data.id); // 보드 ID 추가
                 newBoard.textContent = data.title; // 백엔드에서 반환한 제목을 사용
+
+                // 삭제 버튼 추가
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '삭제';
+                deleteButton.className = 'delete-board-btn';
+                deleteButton.setAttribute('data-board-id', data.id); // 삭제 버튼에 보드 ID 설정
+                deleteButton.addEventListener('click', deleteBoard); // 삭제 버튼 클릭 이벤트 리스너 추가
+
+                newBoard.appendChild(deleteButton); // 보드 요소에 삭제 버튼 추가
+
                 document.querySelector('.list-view').appendChild(newBoard);
             })
             .catch(error => {
@@ -95,6 +141,8 @@ document.querySelector('.board-add').addEventListener('click', function() {
         alert('제목과 한 줄 설명을 모두 입력해야 합니다.');
     }
 });
+
+
 //보드 컬럼 관련 코드
 document.getElementById('col-add').addEventListener('click', function() {
     const colView = document.querySelector('.col-view');
@@ -106,13 +154,15 @@ document.getElementById('col-add').addEventListener('click', function() {
 
     const columnTypes = ['시작전', '진행중', '완료', '긴급'];
     const name = prompt('시작전, 진행중, 완료, 긴급 중 하나를 입력하세요:');
-    const obj = {name : name}
     if (name !== null && columnTypes.includes(name.trim())) {
-        var auth = getToken();
+        const obj = { name: name.trim() };
+        const auth = getToken();
+
         fetch(`/api/board/${boardId}/col`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', 'AccessToken': auth
+                'Content-Type': 'application/json',
+                'AccessToken': auth
             },
             body: JSON.stringify(obj)
         })
@@ -123,20 +173,57 @@ document.getElementById('col-add').addEventListener('click', function() {
                 return response.json();
             })
             .then(data => {
-                console.log('성공성공')
+                // 컬럼이 성공적으로 생성된 경우 UI에 반영
+                const newCol = document.createElement('div');
+                newCol.className = 'col' + (existingCols + 1) + ' cell col-box';
+                newCol.setAttribute('data-col-id', data.id); // 컬럼 ID 설정
+                newCol.innerHTML = `
+                <div class="col-text">${name.trim()}</div>
+                <button class="delete-col-btn">삭제</button>
+            `;
+                colView.appendChild(newCol);
+
+                // 삭제 버튼 클릭 이벤트 리스너 추가
+                const deleteButton = newCol.querySelector('.delete-col-btn');
+                deleteButton.addEventListener('click', function() {
+                    deleteColumn(newCol); // 삭제 함수 호출
+                });
             })
             .catch(error => {
                 alert(error.message);
             });
-
-        const newCol = document.createElement('div');
-        newCol.className = 'col' + (existingCols + 1) + ' cell col-box';
-        newCol.innerHTML = `<div class="col-text">${name.trim()}</div>`;
-        colView.appendChild(newCol);
     } else {
         alert('올바른 컬럼 유형을 입력하세요.');
     }
 });
+
+function deleteColumn(colElement) {
+    const colId = colElement.getAttribute('data-col-id');
+    const auth = getToken();
+
+    fetch(`/api/board/${boardId}/col/${colId}`, {
+        method: 'DELETE',
+        headers: {
+            'AccessToken': auth,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('컬럼 삭제에 실패했습니다.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            colElement.remove(); // 삭제 성공 시 UI에서 컬럼 제거
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+}
+
+
+
 
 let boardId;
 
