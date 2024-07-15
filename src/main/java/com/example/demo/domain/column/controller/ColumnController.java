@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/api/board{boardId}")
 @RequiredArgsConstructor
 public class ColumnController {
 
@@ -22,22 +22,22 @@ public class ColumnController {
 
 
     // 컬럼 생성 (보드에 컬럼 생성)
-    @PostMapping("/{board_id}/col")
-    public ResponseEntity<ResponseColumnDto> createColumn(@Valid @PathVariable Long board_id,
+    @PostMapping("/col")
+    public ResponseEntity<ResponseColumnDto> createColumn(@Valid @PathVariable Long boardId,
                                                           @RequestBody RequestColumnDto requestColumnDto,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 컬럼을 생성하는 서비스 메서드 호출
-        ResponseColumnDto createdColumn = columnService.createColumn(board_id, requestColumnDto, userDetails.getUser());
+        ResponseColumnDto createdColumn = columnService.createColumn(boardId, requestColumnDto, userDetails.getUser());
         return new ResponseEntity<>(createdColumn, HttpStatus.CREATED);
     }
 
     // 컬럼 삭제
-    @DeleteMapping("/{board_id}/col/{col_id}")
-    public ResponseEntity<String> deleteColumn(@PathVariable Long board_id,
-                                               @PathVariable Long col_id,
+    @DeleteMapping("/col/{colId}")
+    public ResponseEntity<String> deleteColumn(@PathVariable Long boardId,
+                                               @PathVariable Long colId,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        columnService.deleteColumn(board_id, col_id, userDetails.getUser());
+        columnService.deleteColumn(boardId, colId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body("컬럼이 삭제되었습니다.");
     }
 
@@ -45,12 +45,12 @@ public class ColumnController {
     // 컬럼 순서 이동
     // "확정" 버튼을 눌렀을 때 동작
     // 보드 ID와 새로운 컬럼 순서(List<Long> columnIds)를 받음.
-    @PutMapping("/{board_id}/reorder")
-    public ResponseEntity<List<ResponseColumnDto>> reorderColumns(@PathVariable Long board_id,
+    @PutMapping("/reorder")
+    public ResponseEntity<List<ResponseColumnDto>> reorderColumns(@PathVariable Long boardId,
                                                                   @RequestBody List<Long> columnIds,
                                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        List<ResponseColumnDto> reorderedColumns = columnService.reorderColumns(board_id, columnIds, userDetails.getUser());
+        List<ResponseColumnDto> reorderedColumns = columnService.reorderColumns(boardId, columnIds, userDetails.getUser());
         return new ResponseEntity<>(reorderedColumns, HttpStatus.OK);
     }
 }
