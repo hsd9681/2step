@@ -158,7 +158,7 @@ document.getElementById('col-add').addEventListener('click', function() {
         const obj = { name: name.trim() };
         const auth = getToken();
 
-        fetch(`/api/board/${boardId}/col`, {
+        fetch(`/api/board${boardId}/col`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -204,47 +204,11 @@ document.getElementById('col-add').addEventListener('click', function() {
         alert('올바른 컬럼 유형을 입력하세요.');
     }
 });
-
-// 카드 추가 함수
-function addCard(columnElement) {
-    const cardText = prompt('카드 내용을 입력하세요:');
-    if (cardText !== null && cardText.trim() !== '') {
-        const auth = getToken();
-        const columnId = columnElement.getAttribute('data-col-id');
-        fetch(`/api/board/${boardId}/card`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'AccessToken': auth
-            },
-            body: JSON.stringify({ content: cardText.trim(), columnId: columnId })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('카드 추가 실패');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const newCard = document.createElement('div');
-                newCard.className = 'card';
-                newCard.textContent = data.content; // 백엔드에서 반환한 카드 내용 사용
-                columnElement.querySelector('.card-container').appendChild(newCard);
-            })
-            .catch(error => {
-                alert(error.message);
-            });
-    } else {
-        alert('카드 내용을 입력해주세요.');
-    }
-}
-
-
 function deleteColumn(colElement) {
     const colId = colElement.getAttribute('data-col-id');
     const auth = getToken();
 
-    fetch(`/api/board/${boardId}/col/${colId}`, {
+    fetch(`/api/board${boardId}/col/${colId}`, {
         method: 'DELETE',
         headers: {
             'AccessToken': auth,
@@ -455,20 +419,6 @@ function addCard(columnElement) {
         alert('카드 내용을 입력해주세요.');
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
