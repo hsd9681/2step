@@ -254,7 +254,7 @@ function fetchColumnList(boardId) {
     const existingCols = colView.querySelectorAll('.col-box').length;
 
     const auth = getToken();
-    fetch(`/api/board/${boardId}/col`, {
+    fetch(`/api/board${boardId}/col`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json', 'AccessToken': auth

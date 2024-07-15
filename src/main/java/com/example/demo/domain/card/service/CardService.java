@@ -14,6 +14,7 @@ import com.example.demo.domain.permission.repository.PermissionRepository;
 import com.example.demo.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,7 @@ public class CardService {
     public CardResponseDto updateCard(Long cardId, CardRequestDto requestDto, String username, User user) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CARD_NOT_FOUND));
-        BoardColumn boardColumn = new BoardColumn();
-        card.update(requestDto, username, boardColumn, user);
+        card.update(requestDto, username, user);
         cardRepository.save(card);
         return new CardResponseDto(card);
     }

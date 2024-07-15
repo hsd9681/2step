@@ -55,7 +55,7 @@ public class ColumnController {
         return new ResponseEntity<>(reorderedColumns, HttpStatus.OK);
     }
 
-    @GetMapping("/{boardId}/col")
+    @GetMapping("/col")
     public ResponseEntity<List<ResponseFindColumnDto>> findAllColumns(@PathVariable("boardId") Long boardId) {
         List<ResponseFindColumnDto> dtoList = columnService.findAllColumns(boardId);
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
