@@ -1,13 +1,11 @@
 package com.example.demo.domain.card.controller;
 
 
-import com.example.demo.domain.board.service.BoardService;
 import com.example.demo.domain.card.dto.CardRequestDto;
 import com.example.demo.domain.card.dto.CardResponseDto;
 import com.example.demo.domain.card.service.CardService;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.service.ColumnService;
-import com.example.demo.domain.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

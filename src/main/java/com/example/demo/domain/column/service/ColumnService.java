@@ -3,7 +3,7 @@ package com.example.demo.domain.column.service;
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.entity.Board;
-import com.example.demo.domain.board.service.BoardService;
+import com.example.demo.domain.board.BoardService;
 import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
 import com.example.demo.domain.column.entity.BoardColumn;

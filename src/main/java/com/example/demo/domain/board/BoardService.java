@@ -1,4 +1,4 @@
-package com.example.demo.domain.board.service;
+package com.example.demo.domain.board;
 
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
@@ -6,7 +6,6 @@ import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.dto.InviteRequestDto;
 import com.example.demo.domain.board.entity.Board;
-import com.example.demo.domain.board.repository.BoardRepository;
 import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.permission.repository.PermissionRepository;
