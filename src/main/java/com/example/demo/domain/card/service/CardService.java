@@ -31,7 +31,7 @@ public class CardService {
             List<Card> cards = cardRepository.findByStatus(status);
             result.addAll(cards.stream()
                     .map(CardResponseDto::new)
-                    .collect(Collectors.toList()));
+                    .toList());
         }
 
         return result;

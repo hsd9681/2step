@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity @Table(name = "permission")
 @NoArgsConstructor
+@Getter
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
