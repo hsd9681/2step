@@ -1,6 +1,7 @@
 package com.example.demo.domain.board.entity;
 
 import com.example.demo.domain.board.dto.BoardRequestDto;
+import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.user.entity.User;
@@ -33,6 +34,9 @@ public class Board {
     // permission
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Permission> permissions = new ArrayList<>();
+
+    @OneToMany(mappedBy ="board", cascade =CascadeType.ALL)
+    private final List<BoardColumn> boardColumns = new ArrayList<>();
 
     // constructor
     @Builder
