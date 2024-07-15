@@ -54,6 +54,10 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     COMMENT_NOT_USER(HttpStatus.FORBIDDEN, "해당 댓글의 작성자가 아닙니다."),
     COMMENT_SAME_USER(HttpStatus.FORBIDDEN, "해당 댓글의 작성자입니다."),
+    USER_NOT_LOGGED_IN_TO_CREATE_COMMENT(HttpStatus.UNAUTHORIZED, "댓글을 작성하려면 로그인해야 합니다."),
+    CANNOT_COMMENT_ON_DELETED_CARD(HttpStatus.BAD_REQUEST, "삭제된 카드에는 댓글을 달 수 없습니다."),
+    USER_NOT_LOGGED_IN_TO_VIEW_COMMENTS(HttpStatus.UNAUTHORIZED, "댓글을 보려면 로그인해야 합니다."),
+    CANNOT_VIEW_COMMENTS_OF_DELETED_CARD(HttpStatus.BAD_REQUEST, "삭제된 카드의 댓글을 볼 수 없습니다."),
 
     // 팔로우 도메인 오류 코드
     SAME_USER(HttpStatus.BAD_REQUEST, "자신을 팔로우 할 수 없습니다."),
