@@ -4,10 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class InviteRequestDto {
-    private String username;
-
-    public InviteRequestDto() {
-    }
+    private final String username;
 
     public InviteRequestDto(String username) {
         this.username = username;
