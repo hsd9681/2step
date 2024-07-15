@@ -1,0 +1,92 @@
+
+* {
+    padding: 0;
+    margin: 0;
+}
+ul, li {
+    list-style: none;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+body {
+    width: 100%;
+    height: 100%;
+    background-color: #E0BEBE;
+}
+html {
+    width: 100%;
+    height: 100%;
+}
+.cell {
+    float: left;
+}
+.main {
+    width: 100%;
+    height: 100%;
+}
+.list {
+    width: 10%;
+    height: 100%;
+    background-color: #C3C3C3;
+    position: relative;
+}
+.view_wrap {
+    width: 80%;
+    height: 100%;
+}
+.box {
+    width: 100%;
+    height: 90%;
+    position: absolute;
+    bottom: 0;
+}
+.text {
+    font-size: 20px;
+}
+.list-view {
+    width: 100%;
+    height: 100%;
+}
+.board-add {
+    width: 25px;
+    height: 25px;
+    margin-left: 36px;
+}
+.board {
+    width: 100%;
+    height: 10%;
+    background-color: yellow;
+    margin-top: 10px;
+}
+.btn {
+    width: 200px;
+    height: 50px;
+}
+.btn-wrap {
+    width: 100%;
+    height: 10%;
+}
+.col-view {
+    width: 100%;
+    height: 100%;
+}
+.col-box {
+    width: 270px;
+    height: 600px;
+    background-color: green;
+    margin-left: 20px;
+    margin-top: 40px;
+    position: relative;
+}
+.col-text {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 20px;
+}
+.user-view {
+    font-size: 25px;
+}
