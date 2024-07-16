@@ -1,4 +1,4 @@
-package com.example.demo.domain.permission.repository;
+package com.example.demo.domain.permission;
 
 import com.example.demo.domain.permission.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;

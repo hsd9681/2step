@@ -6,7 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity @Table(name = "permission")
+@Entity
+@Table(name = "permission")
 @NoArgsConstructor
 @Getter
 public class Permission {

@@ -1,7 +1,6 @@
-package com.example.demo.domain.permission.service;
+package com.example.demo.domain.permission;
 
 import com.example.demo.domain.permission.entity.Permission;
-import com.example.demo.domain.permission.repository.PermissionRepository;
 import com.example.demo.domain.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

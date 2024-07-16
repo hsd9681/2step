@@ -9,7 +9,7 @@ import com.example.demo.domain.card.entity.Card;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
-import com.example.demo.domain.permission.repository.PermissionRepository;
+import com.example.demo.domain.permission.PermissionRepository;
 import com.example.demo.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

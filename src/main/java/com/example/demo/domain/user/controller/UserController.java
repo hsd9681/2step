@@ -1,6 +1,6 @@
 package com.example.demo.domain.user.controller;
 
-import com.example.demo.domain.permission.service.PermissionService;
+import com.example.demo.domain.permission.PermissionService;
 import com.example.demo.domain.user.dto.RefreshTokenRequestDto;
 import com.example.demo.domain.user.dto.SignupRequestDto;
 import com.example.demo.domain.user.dto.UserResponseDto;
