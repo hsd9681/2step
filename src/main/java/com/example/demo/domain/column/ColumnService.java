@@ -1,15 +1,14 @@
-package com.example.demo.domain.column.service;
+package com.example.demo.domain.column;
 
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
-import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.BoardRepository;
 import com.example.demo.domain.board.BoardService;
+import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
 import com.example.demo.domain.column.dto.ResponseFindColumnDto;
 import com.example.demo.domain.column.entity.BoardColumn;
-import com.example.demo.domain.column.repository.ColumnRepository;
 import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +62,6 @@ public class ColumnService {
         boardColumn = columnRepository.save(boardColumn);
         return convertToResponseDto(boardColumn);
     }
-
 
 
     // 컬럼 삭제
@@ -169,7 +167,7 @@ public class ColumnService {
     }
 
     public BoardColumn findStatus(String status) {
-        return columnRepository.findByName(status).orElseThrow(()->new CustomException(ErrorCode.COLUMN_NOT_FOUND));
+        return columnRepository.findByName(status).orElseThrow(() -> new CustomException(ErrorCode.COLUMN_NOT_FOUND));
     }
 
     public List<ResponseFindColumnDto> findAllColumns(Long boardId) {
@@ -179,7 +177,7 @@ public class ColumnService {
         List<BoardColumn> columnList = columnRepository.findAllByBoard(board);
 
         List<ResponseFindColumnDto> responseColumnDtoList = new ArrayList<>();
-        for(BoardColumn boardColumn : columnList) {
+        for (BoardColumn boardColumn : columnList) {
             responseColumnDtoList.add(new ResponseFindColumnDto(boardColumn));
         }
         return responseColumnDtoList;

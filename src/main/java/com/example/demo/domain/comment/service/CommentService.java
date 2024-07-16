@@ -7,7 +7,7 @@ import com.example.demo.domain.board.BoardRepository;
 import com.example.demo.domain.card.entity.Card;
 import com.example.demo.domain.card.CardService;
 import com.example.demo.domain.column.entity.BoardColumn;
-import com.example.demo.domain.column.repository.ColumnRepository;
+import com.example.demo.domain.column.ColumnRepository;
 import com.example.demo.domain.comment.dto.CommentRequestDto;
 import com.example.demo.domain.comment.dto.CommentResponseDto;
 import com.example.demo.domain.comment.entity.Comment;

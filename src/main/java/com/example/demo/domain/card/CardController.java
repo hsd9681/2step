@@ -3,7 +3,7 @@ package com.example.demo.domain.card;
 import com.example.demo.domain.card.dto.CardRequestDto;
 import com.example.demo.domain.card.dto.CardResponseDto;
 import com.example.demo.domain.column.entity.BoardColumn;
-import com.example.demo.domain.column.service.ColumnService;
+import com.example.demo.domain.column.ColumnService;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.service.UserService;
 import jakarta.validation.Valid;

@@ -1,9 +1,8 @@
-package com.example.demo.domain.column.controller;
+package com.example.demo.domain.column;
 
 import com.example.demo.domain.column.dto.RequestColumnDto;
 import com.example.demo.domain.column.dto.ResponseColumnDto;
 import com.example.demo.domain.column.dto.ResponseFindColumnDto;
-import com.example.demo.domain.column.service.ColumnService;
 import com.example.demo.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
