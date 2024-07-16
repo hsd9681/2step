@@ -18,8 +18,7 @@ public class FailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException exception) throws IOException, ServletException
-    {
+            AuthenticationException exception) throws IOException, ServletException {
         log.info("{}", "아이디 또는 비밀번호가 올바르지 않습니다.");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding("UTF-8");

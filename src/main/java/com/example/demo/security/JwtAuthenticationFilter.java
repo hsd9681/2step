@@ -1,9 +1,9 @@
 package com.example.demo.security;
 
+import com.example.demo.domain.user.UserRepository;
 import com.example.demo.domain.user.dto.LoginRequestDto;
 import com.example.demo.domain.user.dto.LoginResponseDto;
 import com.example.demo.domain.user.entity.User;
-import com.example.demo.domain.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,9 +37,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public Authentication attemptAuthentication(
             HttpServletRequest request,
-            HttpServletResponse response) throws AuthenticationException
-    {
-        if(!Objects.equals(request.getMethod(), "POST")) {
+            HttpServletResponse response) throws AuthenticationException {
+        if (!Objects.equals(request.getMethod(), "POST")) {
             throw new AuthenticationServiceException("잘못된 HTTP 요청 입니다.");
         }
         try {
@@ -63,8 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain chain,
-            Authentication authResult) throws IOException, ServletException
-    {
+            Authentication authResult) throws IOException, ServletException {
         User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
         String accessToken = jwtUtil.createAccessToken(user);
         String refreshToken = jwtUtil.createRefreshToken(user);
@@ -76,8 +74,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .message("로그인이 성공적으로 되었습니다.")
                 .build();
 
-        response.addHeader(JwtUtil.ACCESS_TOKEN_HEADER , accessToken);
-        response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER , refreshToken);
+        response.addHeader(JwtUtil.ACCESS_TOKEN_HEADER, accessToken);
+        response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER, refreshToken);
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("text/plain;charset=UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
