@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.domain.user.repository.UserRepository;
+import com.example.demo.domain.user.UserRepository;
 import com.example.demo.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

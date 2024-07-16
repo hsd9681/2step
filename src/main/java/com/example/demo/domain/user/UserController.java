@@ -1,10 +1,9 @@
-package com.example.demo.domain.user.controller;
+package com.example.demo.domain.user;
 
 import com.example.demo.domain.permission.PermissionService;
 import com.example.demo.domain.user.dto.RefreshTokenRequestDto;
 import com.example.demo.domain.user.dto.SignupRequestDto;
 import com.example.demo.domain.user.dto.UserResponseDto;
-import com.example.demo.domain.user.service.UserService;
 import com.example.demo.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +25,19 @@ public class UserController {
     private final PermissionService permissionService;
 
     @GetMapping("/login-page")
-    public ModelAndView login(ModelAndView mv){
+    public ModelAndView login(ModelAndView mv) {
         mv.setViewName("login");
         return mv;
     }
+
     @GetMapping("/signup-page")
-    public ModelAndView signup(ModelAndView mv){
+    public ModelAndView signup(ModelAndView mv) {
         mv.setViewName("signup");
         return mv;
     }
+
     @GetMapping("/main-page")
-    public ModelAndView main(ModelAndView mv){
+    public ModelAndView main(ModelAndView mv) {
         mv.setViewName("main");
         return mv;
     }
@@ -55,11 +56,11 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
-            @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.logout(userDetails);
-        return new ResponseEntity<>("로그아웃 성공" , HttpStatus.OK);
+        return new ResponseEntity<>("로그아웃 성공", HttpStatus.OK);
     }
+
     // user 찾기
     @GetMapping("/{boardId}/users")
     public ResponseEntity<List<UserResponseDto>> getUsersByBoard(@PathVariable Long boardId) {

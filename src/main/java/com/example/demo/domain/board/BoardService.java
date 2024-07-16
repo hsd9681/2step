@@ -10,7 +10,7 @@ import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
 import com.example.demo.domain.permission.PermissionRepository;
 import com.example.demo.domain.user.entity.User;
-import com.example.demo.domain.user.service.UserService;
+import com.example.demo.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

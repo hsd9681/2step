@@ -1,10 +1,9 @@
-package com.example.demo.domain.user.service;
+package com.example.demo.domain.user;
 
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.user.dto.SignupRequestDto;
 import com.example.demo.domain.user.entity.User;
-import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
@@ -25,7 +24,7 @@ public class UserService {
     public void signup(SignupRequestDto requestDto) {
         String encryptPassword = passwordEncoder.encode(requestDto.getPassword());
         boolean isUser = userRepository.existsByUsername(requestDto.getUsername());
-        if(isUser) {
+        if (isUser) {
             throw new NullPointerException("이미 회원가입이 된 사용자 입니다.");
         }
         userRepository.save(User.builder()
@@ -64,5 +63,4 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.USER_NOT_FOUND));
     }
-
 }
