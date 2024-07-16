@@ -1,4 +1,4 @@
-package com.example.demo.domain.card.service;
+package com.example.demo.domain.card;
 
 
 import com.example.demo.common.exception.CustomException;
@@ -6,7 +6,6 @@ import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.card.dto.CardRequestDto;
 import com.example.demo.domain.card.dto.CardResponseDto;
 import com.example.demo.domain.card.entity.Card;
-import com.example.demo.domain.card.repository.CardRepository;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.permission.entity.Permission;
 import com.example.demo.domain.permission.entity.PermissionType;
@@ -14,7 +13,6 @@ import com.example.demo.domain.permission.repository.PermissionRepository;
 import com.example.demo.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +69,7 @@ public class CardService {
         Long boardId = card.getBoardColumn().getBoard().getId();
         // 사용자 권한 조회
         Permission permission = permissionRepository.findByUser_IdAndBoard_Id(userId, boardId);
-       // 권한 검사 및 결과를 반환 (권한이 매니저이거나 카드를 생성한 사용자의 ID 인지)
+        // 권한 검사 및 결과를 반환 (권한이 매니저이거나 카드를 생성한 사용자의 ID 인지)
         return permission != null && (permission.getAuthority() == PermissionType.MANAGER
                 || card.getUser().getId().equals(userId));
     }

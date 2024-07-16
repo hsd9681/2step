@@ -1,8 +1,7 @@
-package com.example.demo.domain.card.controller;
+package com.example.demo.domain.card;
 
 import com.example.demo.domain.card.dto.CardRequestDto;
 import com.example.demo.domain.card.dto.CardResponseDto;
-import com.example.demo.domain.card.service.CardService;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.service.ColumnService;
 import com.example.demo.domain.user.entity.User;

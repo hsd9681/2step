@@ -5,7 +5,7 @@ import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.BoardRepository;
 import com.example.demo.domain.card.entity.Card;
-import com.example.demo.domain.card.service.CardService;
+import com.example.demo.domain.card.CardService;
 import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.column.repository.ColumnRepository;
 import com.example.demo.domain.comment.dto.CommentRequestDto;

@@ -4,7 +4,6 @@ import com.example.demo.domain.card.entity.Card;
 import lombok.Getter;
 
 
-
 @Getter
 public class CardResponseDto {
     private Long id;

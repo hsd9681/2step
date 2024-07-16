@@ -1,4 +1,4 @@
-package com.example.demo.domain.card.repository;
+package com.example.demo.domain.card;
 
 import com.example.demo.domain.card.entity.Card;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -63,7 +63,7 @@ public class Card {
         this.user = user;
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return this.boardColumn.getName();
     }
 }
