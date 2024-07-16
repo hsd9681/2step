@@ -1,8 +1,7 @@
-package com.example.demo.domain.comment.controller;
+package com.example.demo.domain.comment;
 
 import com.example.demo.domain.comment.dto.CommentRequestDto;
 import com.example.demo.domain.comment.dto.CommentResponseDto;
-import com.example.demo.domain.comment.service.CommentService;
 import com.example.demo.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

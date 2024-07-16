@@ -1,22 +1,21 @@
-package com.example.demo.domain.comment.service;
+package com.example.demo.domain.comment;
 
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
-import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.BoardRepository;
-import com.example.demo.domain.card.entity.Card;
+import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.card.CardService;
-import com.example.demo.domain.column.entity.BoardColumn;
+import com.example.demo.domain.card.entity.Card;
 import com.example.demo.domain.column.ColumnRepository;
+import com.example.demo.domain.column.entity.BoardColumn;
 import com.example.demo.domain.comment.dto.CommentRequestDto;
 import com.example.demo.domain.comment.dto.CommentResponseDto;
 import com.example.demo.domain.comment.entity.Comment;
-import com.example.demo.domain.comment.repository.CommentRepository;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.service.UserService;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
