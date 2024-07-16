@@ -3,19 +3,20 @@ package com.example.demo.common.exception;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "CustomException:: ")
-public class CustomException extends RuntimeException{
+public class CustomException extends RuntimeException {
     private ErrorCode errorCode;
 
-    public CustomException(ErrorCode errorCode){
+    public CustomException(ErrorCode errorCode) {
         super(errorCode.getMsg());
         this.errorCode = errorCode;
         log.info("ExceptionMethod: {}", getExceptionMethod());
         log.info("ErrorCode: {}", errorCode.getMsg());
     }
-    public String getExceptionMethod(){
+
+    public String getExceptionMethod() {
         String className = Thread.currentThread().getStackTrace()[3].getClassName();
         String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
-        return className + "." +methodName;
+        return className + "." + methodName;
     }
 
     public ErrorCode getErrorCode() {
