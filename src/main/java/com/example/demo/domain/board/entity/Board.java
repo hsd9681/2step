@@ -35,12 +35,12 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Permission> permissions = new ArrayList<>();
 
-    @OneToMany(mappedBy ="board", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private final List<BoardColumn> boardColumns = new ArrayList<>();
 
     // constructor
     @Builder
-    public Board (String boardName, String intro) {
+    public Board(String boardName, String intro) {
         this.boardName = boardName;
         this.intro = intro;
     }
@@ -57,12 +57,12 @@ public class Board {
     }
 
     // 보드 생성 시 : 유저를 매니저로 설정하는 메서드
-    public void setManager (User user) {
+    public void setManager(User user) {
         this.permissions.add(new Permission(user, this, PermissionType.MANAGER));
     }
 
     // 보드에 사용자 추가 시 : 해당 보드의 user로 추가하는 메서드
-    public void setUser (User user) {
+    public void setUser(User user) {
         this.permissions.add(new Permission(user, this, PermissionType.USER));
     }
 }

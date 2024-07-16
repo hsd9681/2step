@@ -3,7 +3,7 @@ package com.example.demo.domain.comment.service;
 import com.example.demo.common.exception.CustomException;
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.domain.board.entity.Board;
-import com.example.demo.domain.board.repository.BoardRepository;
+import com.example.demo.domain.board.BoardRepository;
 import com.example.demo.domain.card.entity.Card;
 import com.example.demo.domain.card.service.CardService;
 import com.example.demo.domain.column.entity.BoardColumn;

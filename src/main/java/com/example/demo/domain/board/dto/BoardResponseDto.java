@@ -13,7 +13,7 @@ public class BoardResponseDto {
     private String content;
 
     @Builder
-    public BoardResponseDto (Long id, String title, String content) {
+    public BoardResponseDto(Long id, String title, String content) {
         this.id = id;
         this.title = title;
         this.content = content;

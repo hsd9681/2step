@@ -1,10 +1,8 @@
-package com.example.demo.domain.board.controller;
+package com.example.demo.domain.board;
 
 import com.example.demo.domain.board.dto.BoardRequestDto;
 import com.example.demo.domain.board.dto.BoardResponseDto;
 import com.example.demo.domain.board.dto.InviteRequestDto;
-import com.example.demo.domain.board.service.BoardService;
-import com.example.demo.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
